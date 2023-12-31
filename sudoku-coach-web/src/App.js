@@ -18,19 +18,25 @@ function App() {
 
   //const [allCandidates, setAllCandidates] = useState([]);
 
-  const allCandidates = [];
+  const initCandidates = [];
 
   for (let i = 0; i < 81; i++) {
-    allCandidates[i] = new Set();
+    initCandidates[i] = new Set();
   }
 
-  //setAllCandidates(allCandidates);
+  const [allCandidates, setAllCandidates] = useState(initCandidates);
 
   const handleTestButton = () => {
     const updatedPuzzle = [...puzzle];
     updatedPuzzle[0][0] = 1;
     updatedPuzzle[0][1] = 2;
     setPuzzle(updatedPuzzle);
+
+    const updatedAllCandidates = allCandidates;
+    updatedAllCandidates[27].add(1);
+    updatedAllCandidates[28].add(2);
+    setAllCandidates(updatedAllCandidates);
+    
     alert("you have pressed the test button!");
   }
 
