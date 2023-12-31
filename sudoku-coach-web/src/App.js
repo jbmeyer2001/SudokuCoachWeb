@@ -1,20 +1,19 @@
 import logo from './logo.svg';
 import './App.css';
-import Board from './Board.js';
 import { useState } from "react";
 
 function App() {
 
   const [puzzle, setPuzzle] = useState([
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '']
+    ['', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '']
   ]);
 
   //const [allCandidates, setAllCandidates] = useState([]);
@@ -39,7 +38,40 @@ function App() {
     <div className="App">
       <h1>Sudoku</h1>
       <button onClick={handleTestButton}>test</button>
-      <Board puzzle={puzzle} allCandidates={allCandidates}/>
+      <div class="board">{
+
+        puzzle.map((row, rowIndex) =>
+          <div className="boardRow">{
+
+            row.map((val, valIndex) =>
+              <div class="boardCell">
+                <div class="value">{val}</div>
+                <table>
+                  <tr>
+                    <th>{allCandidates[rowIndex * 9 + valIndex].has(1) ? 1 : ''}</th>
+                    <th>{allCandidates[rowIndex * 9 + valIndex].has(2) ? 2 : ''}</th>
+                    <th>{allCandidates[rowIndex * 9 + valIndex].has(3) ? 3 : ''}</th>
+                  </tr>
+                  <tr>
+                    <th>{allCandidates[rowIndex * 9 + valIndex].has(4) ? 4 : ''}</th>
+                    <th>{allCandidates[rowIndex * 9 + valIndex].has(5) ? 5 : ''}</th>
+                    <th>{allCandidates[rowIndex * 9 + valIndex].has(6) ? 6 : ''}</th>
+                  </tr>
+                  <tr>
+                    <th>{allCandidates[rowIndex * 9 + valIndex].has(7) ? 7 : ''}</th>
+                    <th>{allCandidates[rowIndex * 9 + valIndex].has(8) ? 8 : ''}</th>
+                    <th>{allCandidates[rowIndex * 9 + valIndex].has(9) ? 9 : ''}</th>
+                  </tr>
+                </table>
+              </div>
+            )
+          }
+
+          </div>
+        )
+
+      }  
+      </div>
     </div>
   );
 }
