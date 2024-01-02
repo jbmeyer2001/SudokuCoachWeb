@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
+import { board } from './solver/Solver.js'
 
 function App() {
 
@@ -26,25 +27,29 @@ function App() {
 
   const [allCandidates, setAllCandidates] = useState(initCandidates);
 
-  const handleTestButton = () => {
-    const updateddisplayPuzzle = [...displayPuzzle];
-    setdisplayPuzzle(updateddisplayPuzzle);
+  function editValue (event){
+    let row = Math.trunc(event.target.id / 9);
+    let col = Math.trunc(event.target.id) % 9;
+    let val = document.getElementById(event.target.id).value;
 
-    const updatedAllCandidates = allCandidates;
-    setAllCandidates(updatedAllCandidates);
-    
-    alert("you have pressed the test button!");
-  }
+    if (val == '') {
+      board[row][col] = 0;
+      return;
+    }
 
-  function handleTextChange (e){
-    alert("you have input text");
-    
+    if (val < 1 || val > 9) {
+      board[row][col] = 0;
+      document.getElementById(event.target.id).value = '';
+      alert("inputs must be numbers between 1 and 9");
+      return;
+    }
+
+    board[row][col] = Number(val);
   }
 
   return (
     <div className="App">
       <h1>Sudoku</h1>
-      <button onClick={handleTestButton}>test</button>
       <div class="board">{
 
         displayPuzzle.map((row, rowIndex) =>
@@ -53,7 +58,7 @@ function App() {
             row.map((val, valIndex) =>
               <div class="boardCell">
                 <div class="value">{val}</div>
-                <input type="number" onChange={handleTextChange} id={rowIndex * 9 + valIndex}></input>
+                <input type="number" onChange={editValue} id={rowIndex * 9 + valIndex}></input>
                 <table>
                   <tr>
                     <th>{allCandidates[rowIndex * 9 + valIndex].has(1) ? 1 : ''}</th>
