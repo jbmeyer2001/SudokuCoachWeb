@@ -4,7 +4,7 @@ import { useState } from "react";
 
 function App() {
 
-  const [puzzle, setPuzzle] = useState([
+  const [displayPuzzle, setdisplayPuzzle] = useState([
     ['', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', ''],
@@ -27,17 +27,18 @@ function App() {
   const [allCandidates, setAllCandidates] = useState(initCandidates);
 
   const handleTestButton = () => {
-    const updatedPuzzle = [...puzzle];
-    updatedPuzzle[0][0] = 1;
-    updatedPuzzle[0][1] = 2;
-    setPuzzle(updatedPuzzle);
+    const updateddisplayPuzzle = [...displayPuzzle];
+    setdisplayPuzzle(updateddisplayPuzzle);
 
     const updatedAllCandidates = allCandidates;
-    updatedAllCandidates[27].add(1);
-    updatedAllCandidates[28].add(2);
     setAllCandidates(updatedAllCandidates);
     
     alert("you have pressed the test button!");
+  }
+
+  function handleTextChange (e){
+    alert("you have input text");
+    
   }
 
   return (
@@ -46,12 +47,13 @@ function App() {
       <button onClick={handleTestButton}>test</button>
       <div class="board">{
 
-        puzzle.map((row, rowIndex) =>
+        displayPuzzle.map((row, rowIndex) =>
           <div className="boardRow">{
 
             row.map((val, valIndex) =>
               <div class="boardCell">
                 <div class="value">{val}</div>
+                <input type="number" onChange={handleTextChange} id={rowIndex * 9 + valIndex}></input>
                 <table>
                   <tr>
                     <th>{allCandidates[rowIndex * 9 + valIndex].has(1) ? 1 : ''}</th>
