@@ -78,6 +78,7 @@ table {
   position: absolute;
   height: 90px;
   width: 90px;
+  z-index: -1;
 }
 
 tr {
@@ -107,6 +108,7 @@ input[type=number] {
   font-size: 60px;
   text-align: center;
   font-family: "Times New Roman", Times, serif;
+
 }
 
 /*from https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp*/

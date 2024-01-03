@@ -1,8 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
-import { board } from './solver/Solver.js'
+import { board, generateCandidates } from './solver/Solver.js'
 import { checkPuzzle } from './solver/CheckPuzzle.js'
+import { getRow } from './solver/Utility.js';
 
 function App() {
 
@@ -26,7 +27,7 @@ function App() {
 
   const [allCandidates, setAllCandidates] = useState(initCandidates);
 
-  const handleTestButton = () => {
+  function handleTestButton() {
       let solveability = checkPuzzle();
 
       if (solveability == "INVALID") {
@@ -40,6 +41,10 @@ function App() {
       if (solveability == "MULTIPLESOLUTIONS") {
         alert("Sudoku invalid!\nMake sure you entered every value correctly, as there's multiple solutions to the given puzzle (which makes it invalid).");
       }
+  }
+
+  function handleCandidatesButton() {
+    setAllCandidates(generateCandidates());
   }
 
   function editValue (event){
@@ -62,10 +67,16 @@ function App() {
     board[row][col] = Number(val);
   }
 
+  function getRowTop(row) {
+    let val = 113 + row * 101 + Math.trunc(row / 3) * 3; //to be potentially changed later
+    return val.toString() + "px";
+  }
+
   return (
     <div className="App">
       <h1>Sudoku</h1>
       <button onClick={handleTestButton}>test</button>
+      <button onClick={handleCandidatesButton}>candidates</button>
       <div class="board">{
 
         displayPuzzle.map((row, rowIndex) =>
@@ -75,7 +86,7 @@ function App() {
               <div class="boardCell">
                 <div class="value">{val}</div>
                 <input type="number" onChange={editValue} id={rowIndex * 9 + valIndex}></input>
-                <table>
+                <table style={{top: getRowTop(rowIndex)}}>
                   <tr>
                     <th>{allCandidates[rowIndex * 9 + valIndex].has(1) ? 1 : ''}</th>
                     <th>{allCandidates[rowIndex * 9 + valIndex].has(2) ? 2 : ''}</th>
