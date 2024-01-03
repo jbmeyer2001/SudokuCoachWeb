@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
 import { board } from './solver/Solver.js'
+import { checkPuzzle } from './solver/CheckPuzzle.js'
 
 function App() {
 
@@ -17,8 +18,6 @@ function App() {
     ['', '', '', '', '', '', '', '', '']
   ]);
 
-  //const [allCandidates, setAllCandidates] = useState([]);
-
   const initCandidates = [];
 
   for (let i = 0; i < 81; i++) {
@@ -26,6 +25,22 @@ function App() {
   }
 
   const [allCandidates, setAllCandidates] = useState(initCandidates);
+
+  const handleTestButton = () => {
+      let solveability = checkPuzzle();
+
+      if (solveability == "INVALID") {
+        alert("Sudoku invalid!\nThere is a duplicate in one of the rows, columns, or boxes.");
+      }
+
+      if (solveability == "UNSOLVEABLE") {
+        alert("Sudoku invalid!\nCheck your entered values, the given sudoku doesn't have a solution.");
+      }
+
+      if (solveability == "MULTIPLESOLUTIONS") {
+        alert("Sudoku invalid!\nMake sure you entered every value correctly, as there's multiple solutions to the given puzzle (which makes it invalid).");
+      }
+  }
 
   function editValue (event){
     let row = Math.trunc(event.target.id / 9);
@@ -50,6 +65,7 @@ function App() {
   return (
     <div className="App">
       <h1>Sudoku</h1>
+      <button onClick={handleTestButton}>test</button>
       <div class="board">{
 
         displayPuzzle.map((row, rowIndex) =>
