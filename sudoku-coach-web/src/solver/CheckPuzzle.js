@@ -1,9 +1,8 @@
 import {getRow, getCol, getBox, isSolved} from './Utility.js'
-import { board } from './Solver.js'
 
 let solutions = 0;
 
-function checkPuzzle() {
+function checkPuzzle(board) {
     if (!isValid(board)) {
         return "INVALID";
     }
@@ -51,9 +50,9 @@ function duplicates(indices, puzzle) {
 function isValid(puzzle) {
 
     for (let i = 0; i < 9; i++) {
-        let rowIndices = getRow(i);
-        let colIndices = getCol(i);
-        let boxIndices = getBox(i);
+        let rowIndices = Array.from(getRow(i));
+        let colIndices = Array.from(getCol(i));
+        let boxIndices = Array.from(getBox(i));
 
         if (duplicates(rowIndices, puzzle) || duplicates(colIndices, puzzle) || duplicates(boxIndices, puzzle)) {
             return false;

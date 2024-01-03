@@ -1,34 +1,32 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
-import { board, generateCandidates } from './solver/Solver.js'
-import { checkPuzzle } from './solver/CheckPuzzle.js'
-import { getRow } from './solver/Utility.js';
+import { generateCandidates, getNextStep, check, insertTypedVal } from './solver/Solver.js'
 
 function App() {
 
-  const [displayPuzzle, setdisplayPuzzle] = useState([
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '']
+  const [displayPuzzle, setDisplayPuzzle] = useState([
+    ['', '9', '', '', '7', '1', '4', '', ''],
+    ['3', '', '7', '5', '', '8', '', '', ''],
+    ['', '', '', '', '6', '4', '', '', ''],
+    ['2', '', '9', '', '', '', '', '3', ''],
+    ['5', '1', '', '', '', '', '', '2', '4'],
+    ['', '3', '', '', '', '', '8', '', '9'],
+    ['', '', '', '1', '9', '', '', '', ''],
+    ['', '', '', '4', '', '7', '3', '', '1'],
+    ['', '', '1', '6', '8', '', '', '9', '']
   ]);
 
   const initCandidates = [];
-
   for (let i = 0; i < 81; i++) {
     initCandidates[i] = new Set();
   }
-
   const [allCandidates, setAllCandidates] = useState(initCandidates);
 
+  const [stepText, setStepText] = useState("step!");
+
   function handleTestButton() {
-      let solveability = checkPuzzle();
+      let solveability = check();
 
       if (solveability == "INVALID") {
         alert("Sudoku invalid!\nThere is a duplicate in one of the rows, columns, or boxes.");
@@ -47,29 +45,63 @@ function App() {
     setAllCandidates(generateCandidates());
   }
 
+  function handleStepButton() {
+    let step = getNextStep();
+
+    switch(step.step) {
+      case "SOLECANDIDATE":
+        handleSoleCandidate(step);
+        break;
+      case "UNIQUECANDIDATE":
+        handleUniqueCandidate(step);
+        break;
+      default:
+        alert("there was no step!");
+        break;
+    }
+  }
+
+  function handleSoleCandidate(step) {
+    setAllCandidates(step.candidates);
+
+    let updatedDisplayPuzzle = [...displayPuzzle];
+    updatedDisplayPuzzle[step.row][step.col] = step.val;
+    setDisplayPuzzle(updatedDisplayPuzzle);
+
+    /*TODO: update text output*/
+    setStepText("Sole Candidate");
+  }
+
+  function handleUniqueCandidate(step) {
+    setAllCandidates(step.candidates);
+
+    let updatedDisplayPuzzle = [...displayPuzzle];
+    console.log(step.val);
+    updatedDisplayPuzzle[step.row][step.col] = step.val;
+    setDisplayPuzzle(updatedDisplayPuzzle);
+
+    /*TODO: update text output*/
+    setStepText("Unique Candidate");
+  }
+
   function editValue (event){
     let row = Math.trunc(event.target.id / 9);
     let col = Math.trunc(event.target.id) % 9;
     let val = document.getElementById(event.target.id).value;
 
     if (val == '') {
-      board[row][col] = 0;
+      insertTypedVal(row, col, 0);
       return;
     }
 
     if (val < 1 || val > 9) {
-      board[row][col] = 0;
+      insertTypedVal(row, col, 0);
       document.getElementById(event.target.id).value = '';
       alert("inputs must be numbers between 1 and 9");
       return;
     }
 
-    board[row][col] = Number(val);
-  }
-
-  function getRowTop(row) {
-    let val = 113 + row * 101 + Math.trunc(row / 3) * 3; //to be potentially changed later
-    return val.toString() + "px";
+    insertTypedVal(Number(val));
   }
 
   return (
@@ -77,6 +109,7 @@ function App() {
       <h1>Sudoku</h1>
       <button onClick={handleTestButton}>test</button>
       <button onClick={handleCandidatesButton}>candidates</button>
+      <button onClick={handleStepButton}>Step</button>
       <div class="board">{
 
         displayPuzzle.map((row, rowIndex) =>
@@ -112,8 +145,14 @@ function App() {
 
       }  
       </div>
+      <h1>{stepText}</h1>
     </div>
   );
+}
+
+function getRowTop(row) {
+  let val = 113 + row * 101 + Math.trunc(row / 3) * 3; //to be potentially changed later
+  return val.toString() + "px";
 }
 
 export default App;

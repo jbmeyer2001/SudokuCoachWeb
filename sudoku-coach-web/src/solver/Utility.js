@@ -1,9 +1,9 @@
 //takes a row number as paramenter, and returns a set of indices of the spaces in that row
 function getRow(row) {
-    let rowIndices = [];
+    let rowIndices = new Set();
 
     for (let i = 0; i < 9; i++) {
-        rowIndices.push(i + row * 9);
+        rowIndices.add(i + row * 9);
     }
 
     return rowIndices;
@@ -11,10 +11,10 @@ function getRow(row) {
 
 //takes a column number as paramenter, and returns a set of indices of the spaces in that column
 function getCol(col) {
-    let colIndices = [];
+    let colIndices = new Set();
 
     for (let i = 0; i < 9; i++) {
-        colIndices.push(i * 9 + col);
+        colIndices.add(i * 9 + col);
     }
 
     return colIndices;
@@ -22,10 +22,10 @@ function getCol(col) {
 
 //takes a box number as paramenter, and returns a set of indices of the spaces in that box
 function getBox(box) {
-    let boxIndices = [];
+    let boxIndices = new Set();
 
     for (let i = 0; i < 9; i++) {
-        boxIndices.push(Math.trunc(i / 3) * 9 + (i % 3) + Math.trunc(box / 3) * 27 + (box % 3) * 3);
+        boxIndices.add(Math.trunc(i / 3) * 9 + (i % 3) + Math.trunc(box / 3) * 27 + (box % 3) * 3);
     }
 
     return boxIndices;
@@ -45,4 +45,41 @@ function isSolved(puzzle) {
     return true;
 }
 
-export {getRow, getCol, getBox, isSolved};
+function getRowColBoxNum(index, which) {
+    let retval = [];
+
+    if (which.includes("row")) {
+        retval.push(Math.trunc(index / 9));
+    }
+
+    if (which.includes("col")) {
+        retval.push(index % 9);
+    }
+
+    if (which.includes("box")) {
+        retval.push(Math.trunc(index / 27) * 3 + Math.trunc((index % 9) / 3));
+    }
+
+    return retval;
+}
+
+function getCandidatesFromIndices(candidates, indices) {
+    let retval = new Set();
+
+    for (const index of indices.entries()) {
+        candidates[index[0]].forEach((candidate) => {
+            retval.add(candidate)
+        });
+    }
+    
+    return retval;
+}
+
+export {
+    getRow, 
+    getCol, 
+    getBox, 
+    isSolved,
+    getRowColBoxNum,
+    getCandidatesFromIndices
+};
