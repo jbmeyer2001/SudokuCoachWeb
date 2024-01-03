@@ -31,4 +31,4 @@ function soleCandidate(candidates, unfilled, insertVal) {
     return retval;
 }
 
-export { soleCandidate }
+export default soleCandidate;

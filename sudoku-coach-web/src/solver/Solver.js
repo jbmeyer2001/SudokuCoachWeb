@@ -1,19 +1,19 @@
 import { getRow, getCol, getBox, getRowColBoxNum } from './Utility.js'
 import { checkPuzzle } from './CheckPuzzle.js'
-import { soleCandidate } from './SoleCandidate.js'
-import { uniqueCandidate } from './UniqueCandidate.js'
-
+import soleCandidate from './SoleCandidate.js'
+import uniqueCandidate from './UniqueCandidate.js'
+import blockRowCol from './BlockRowCol.js'
 
 const board = [
-    [0, 9, 0, 0, 7, 1, 4, 0, 0],
-    [3, 0, 7, 5, 0, 8, 0, 0, 0],
-    [0, 0, 0, 0, 6, 4, 0, 0, 0],
-    [2, 0, 9, 0, 0, 0, 0, 3, 0],
-    [5, 1, 0, 0, 0, 0, 0, 2, 4],
-    [0, 3, 0, 0, 0, 0, 8, 0, 9],
-    [0, 0, 0, 1, 9, 0, 0, 0, 0],
-    [0, 0, 0, 4, 0, 7, 3, 0, 1],
-    [0, 0, 1, 6, 8, 0, 0, 9, 0]
+    [0, 9, 0, 3, 7, 1, 4, 0, 0],
+    [3, 4, 7, 5, 2, 8, 9, 1, 6],
+    [1, 0, 0, 9, 6, 4, 0, 0, 3],
+    [2, 0, 9, 0, 4, 0, 1, 3, 0],
+    [5, 1, 0, 0, 3, 9, 0, 2, 4],
+    [0, 3, 4, 2, 1, 0, 8, 0, 9],
+    [0, 0, 3, 1, 9, 2, 0, 4, 0],
+    [9, 0, 0, 4, 5, 7, 3, 0, 1],
+    [4, 0, 1, 6, 8, 3, 0, 9, 0]
   ]
 
 const candidates = [];
@@ -86,6 +86,12 @@ function getNextStep() {
         return step;
     }
 
+    step = blockRowCol(candidates, removeCandidates);
+    console.log(step.step);
+    if (step.step != "NOSTEP") {
+        return step;
+    }
+
     return step;
 }
 
@@ -108,6 +114,14 @@ function insertVal (row, col, val) {
     rowSet.forEach((space, set) => {candidates[space].delete(val)});
     colSet.forEach((space, set) => {candidates[space].delete(val)});
     boxSet.forEach((space, set) => {candidates[space].delete(val)});
+}
+
+function removeCandidates(affectedSpaces, val) {
+    let it = affectedSpaces[Symbol.iterator]();
+
+    for (const space of it) {
+        candidates[space].delete(val);
+    }
 }
 
 export { board, candidates, unfilled, generateCandidates, getNextStep, check, insertTypedVal};

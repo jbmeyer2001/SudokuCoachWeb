@@ -2,19 +2,20 @@ import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
 import { generateCandidates, getNextStep, check, insertTypedVal } from './solver/Solver.js'
+import { setDifference } from './solver/Utility.js'
 
 function App() {
 
   const [displayPuzzle, setDisplayPuzzle] = useState([
-    ['', '9', '', '', '7', '1', '4', '', ''],
-    ['3', '', '7', '5', '', '8', '', '', ''],
-    ['', '', '', '', '6', '4', '', '', ''],
-    ['2', '', '9', '', '', '', '', '3', ''],
-    ['5', '1', '', '', '', '', '', '2', '4'],
-    ['', '3', '', '', '', '', '8', '', '9'],
-    ['', '', '', '1', '9', '', '', '', ''],
-    ['', '', '', '4', '', '7', '3', '', '1'],
-    ['', '', '1', '6', '8', '', '', '9', '']
+    ['', '9', '', '3', '7', '1', '4', '', ''],
+    ['3', '4', '7', '5', '2', '8', '9', '1', '6'],
+    ['1', '', '', '9', '6', '4', '', '', '3'],
+    ['2', '', '9', '', '4', '', '1', '3', ''],
+    ['5', '1', '', '', '3', '9', '', '2', '4'],
+    ['', '3', '4', '2', '1', '', '8', '', '9'],
+    ['', '', '3', '1', '9', '2', '', '4', ''],
+    ['9', '', '', '4', '5', '7', '3', '', '1'],
+    ['4', '', '1', '6', '8', '3', '', '9', '']
   ]);
 
   const initCandidates = [];
@@ -55,6 +56,24 @@ function App() {
       case "UNIQUECANDIDATE":
         handleUniqueCandidate(step);
         break;
+      case "BLOCKROWCOL":
+        handleBlockRowCol(step);
+        break;
+      case "BLOCKBLOCK":
+        handleBlockBlock(step);
+        break;
+      case "NAKEDSUBSET":
+        handleNakedSubset(step);
+        break;
+      case "HIDDENSUBSET":
+        handleHiddenSubset(step);
+        break;
+      case "XWING":
+        handleXWing(step);
+        break;
+      case "YWING":
+        handleYWing(step);
+        break;
       default:
         alert("there was no step!");
         break;
@@ -62,26 +81,84 @@ function App() {
   }
 
   function handleSoleCandidate(step) {
-    setAllCandidates(step.candidates);
+    //update any candidates
+    updateAllCandidates(step.candidates);
 
+    //update changes made to the board
     let updatedDisplayPuzzle = [...displayPuzzle];
     updatedDisplayPuzzle[step.row][step.col] = step.val;
     setDisplayPuzzle(updatedDisplayPuzzle);
 
     /*TODO: update text output*/
+    //update text
     setStepText("Sole Candidate");
   }
 
   function handleUniqueCandidate(step) {
-    setAllCandidates(step.candidates);
+    //update any candidates
+    updateAllCandidates(step.candidates);
 
+    //update changes made to the board
     let updatedDisplayPuzzle = [...displayPuzzle];
     console.log(step.val);
     updatedDisplayPuzzle[step.row][step.col] = step.val;
     setDisplayPuzzle(updatedDisplayPuzzle);
 
     /*TODO: update text output*/
+    //update text
     setStepText("Unique Candidate");
+  }
+
+  function handleBlockRowCol(step) {
+    //update any candidates
+    updateAllCandidates(step.candidates);
+
+    /*TODO: update text output*/
+    //update text
+    setStepText("BlockRowCol");
+  }
+
+  function handleBlockBlock(step) {
+    updateAllCandidates(step.candidates);
+
+    setStepText("BLOCKBLOCK");
+  }
+
+  function handleNakedSubset(step) {
+    updateAllCandidates(step.candidates);
+
+    setStepText("NAKEDSUBSET");
+  }
+
+  function handleHiddenSubset(step) {
+    updateAllCandidates(step.candidates);
+
+    setStepText("HIDDENSUBSET");
+  }
+
+  function handleXWing(step) {
+    updateAllCandidates(step.candidates);
+
+    setStepText("XWING");
+  }
+
+  function handleYWing(step) {
+    updateAllCandidates(step.candidates);
+
+    setStepText("YWING");
+  }
+
+  function updateAllCandidates(newCandidates) {
+    let updatedAllCandidates = [...allCandidates];
+    for (let i = 0; i < 81; i++) {
+      let diff = setDifference(updatedAllCandidates[i], newCandidates[i]);
+      if (diff.size != 0) {
+        diff.forEach((val) => {
+          updatedAllCandidates.delete(val);
+        });
+      }
+    }
+    setAllCandidates(updatedAllCandidates);
   }
 
   function editValue (event){

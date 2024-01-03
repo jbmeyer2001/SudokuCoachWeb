@@ -64,4 +64,4 @@ function uniqueCandidate(candidates, unfilled, insertVal) {
     };
 }
 
-export { uniqueCandidate }
+export default uniqueCandidate;

@@ -75,11 +75,58 @@ function getCandidatesFromIndices(candidates, indices) {
     return retval;
 }
 
+//there is not browser compatibility for Set.prototype.union() so I'm making my own version
+//as per https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/union
+function setUnion(sets) {
+    let retval = new Set();
+    
+    const it1 = sets[Symbol.iterator]();
+    for (const set of it1) {
+        const it2 = Array.from(set)[Symbol.iterator]();
+        for (const val of it2) {
+            retval.add(val);
+        }
+    }
+
+    return retval;
+}
+
+//there is not browser compatibility for Set.prototype.intersection() so I'm making my own version
+//as per https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/intersection
+function setIntersection(set1, set2) {
+    let retval = new Set();
+
+    set1.forEach((val) => {
+        if (set2.has(val)) {
+            retval.add(val);
+        }
+    });
+
+    return retval;
+}
+
+//there is not browser compatibility fro Set.prototype.difference() so I'm making my own version
+//as per https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/difference
+function setDifference(set1, set2) {
+    let retval = new Set();
+
+    set1.forEach((val) => {
+        if (!set2.has(val)) {
+            retval.add(val);
+        }
+    });
+
+    return retval;
+}
+
 export {
     getRow, 
     getCol, 
     getBox, 
     isSolved,
     getRowColBoxNum,
-    getCandidatesFromIndices
+    getCandidatesFromIndices,
+    setUnion,
+    setIntersection,
+    setDifference
 };
