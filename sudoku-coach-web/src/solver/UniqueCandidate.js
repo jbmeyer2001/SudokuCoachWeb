@@ -1,4 +1,4 @@
-import { getRow, getCol, getBox, getRowColBoxNum, getCandidatesFromIndices } from "./Utility";
+import { getRow, getCol, getBox, getRowColBoxNum, getCandidates } from "./Utility";
 
 function uniqueCandidate(candidates, unfilled, insertVal) {
 
@@ -14,9 +14,9 @@ function uniqueCandidate(candidates, unfilled, insertVal) {
         colSet.delete(index);
         boxSet.delete(index);
 
-        let rowCandidates = getCandidatesFromIndices(candidates, rowSet);
-        let colCandidates = getCandidatesFromIndices(candidates, colSet);
-        let boxCandidates = getCandidatesFromIndices(candidates, boxSet);
+        let rowCandidates = getCandidates(candidates, rowSet);
+        let colCandidates = getCandidates(candidates, colSet);
+        let boxCandidates = getCandidates(candidates, boxSet);
         let spaceCandidates = candidates[index];
 
         for (const candidatePair of spaceCandidates.entries()) {

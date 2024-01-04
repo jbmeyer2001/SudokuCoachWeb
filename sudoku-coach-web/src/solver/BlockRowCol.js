@@ -3,7 +3,7 @@ import {
     getCol,
     getBox,
     getRowColBoxNum,
-    getCandidatesFromIndices,
+    getCandidates,
     setUnion, 
     setIntersection, 
     setDifference,  
@@ -45,32 +45,32 @@ function blockRowCol(candidates, removeCandidates) {
         */
         let onlyRow1Common = setDifference(
             row1Common, 
-            getCandidatesFromIndices(candidates, setDifference(getBox(box), getRow(row)))
+            getCandidates(candidates, setDifference(getBox(box), getRow(row)))
         );
         let onlyRow2Common = setDifference(
             row2Common, 
-            getCandidatesFromIndices(candidates, setDifference(getBox(box), getRow(row + 1)))
+            getCandidates(candidates, setDifference(getBox(box), getRow(row + 1)))
         );
         let onlyRow3Common = setDifference(
             row3Common, 
-            getCandidatesFromIndices(candidates, setDifference(getBox(box), getRow(row + 2)))
+            getCandidates(candidates, setDifference(getBox(box), getRow(row + 2)))
         );
         let onlyCol1Common = setDifference(
             col1Common, 
-            getCandidatesFromIndices(candidates, setDifference(getBox(box), getCol(col)))
+            getCandidates(candidates, setDifference(getBox(box), getCol(col)))
         );
         let onlyCol2Common = setDifference(
             col2Common, 
-            getCandidatesFromIndices(candidates, setDifference(getBox(box), getCol(col + 1)))
+            getCandidates(candidates, setDifference(getBox(box), getCol(col + 1)))
         );
         let onlyCol3Common = setDifference(
             col3Common, 
-            getCandidatesFromIndices(candidates, setDifference(getBox(box), getCol(col + 2)))
+            getCandidates(candidates, setDifference(getBox(box), getCol(col + 2)))
         );
         
         //if any of the commonalities we found allow us to remove candidates, remove them and update the candidates!
         let affectedSpaces = setDifference(getRow(row), getBox(box));
-        let affectedCandidates = getCandidatesFromIndices(candidates, affectedSpaces);
+        let affectedCandidates = getCandidates(candidates, affectedSpaces);
         let it = onlyRow1Common[Symbol.iterator]();
         for (const candidate of it) {
             if (affectedCandidates.has(candidate)) {
@@ -87,7 +87,7 @@ function blockRowCol(candidates, removeCandidates) {
         };
 
         affectedSpaces = setDifference(getRow(row + 1), getBox(box));
-        affectedCandidates = getCandidatesFromIndices(candidates, affectedSpaces);
+        affectedCandidates = getCandidates(candidates, affectedSpaces);
         it = onlyRow2Common[Symbol.iterator]();
         for (const candidate of it) {
             if (affectedCandidates.has(candidate)) {
@@ -104,7 +104,7 @@ function blockRowCol(candidates, removeCandidates) {
         };
 
         affectedSpaces = setDifference(getRow(row + 2), getBox(box));
-        affectedCandidates = getCandidatesFromIndices(candidates, affectedSpaces);
+        affectedCandidates = getCandidates(candidates, affectedSpaces);
         it = onlyRow3Common[Symbol.iterator]();
         for (const candidate of it) {
             if (affectedCandidates.has(candidate)) {
@@ -121,7 +121,7 @@ function blockRowCol(candidates, removeCandidates) {
         };
 
         affectedSpaces = setDifference(getCol(col), getBox(box));
-        affectedCandidates = getCandidatesFromIndices(candidates, affectedSpaces);
+        affectedCandidates = getCandidates(candidates, affectedSpaces);
         it = onlyCol1Common[Symbol.iterator]();
         for (const candidate of it) {
             if (affectedCandidates.has(candidate)) {
@@ -138,7 +138,7 @@ function blockRowCol(candidates, removeCandidates) {
         };
         
         affectedSpaces = setDifference(getCol(col + 1), getBox(box));
-        affectedCandidates = getCandidatesFromIndices(candidates, affectedSpaces);
+        affectedCandidates = getCandidates(candidates, affectedSpaces);
         it = onlyCol2Common[Symbol.iterator]();
         for(const candidate of it){
             if (affectedCandidates.has(candidate)) {
@@ -155,7 +155,7 @@ function blockRowCol(candidates, removeCandidates) {
         };
 
         affectedSpaces = setDifference(getCol(col + 2), getBox(box));
-        affectedCandidates = getCandidatesFromIndices(candidates, affectedSpaces);
+        affectedCandidates = getCandidates(candidates, affectedSpaces);
         it = onlyCol3Common[Symbol.iterator]();
         for (const candidate of it) {
             if (affectedCandidates.has(candidate)) {

@@ -63,11 +63,12 @@ function getRowColBoxNum(index, which) {
     return retval;
 }
 
-function getCandidatesFromIndices(candidates, indices) {
+function getCandidates(candidates, indices) {
     let retval = new Set();
 
-    for (const index of indices.entries()) {
-        candidates[index[0]].forEach((candidate) => {
+    let it = indices[Symbol.iterator]();
+    for (const index of it) {
+        candidates[index].forEach((candidate) => {
             retval.add(candidate)
         });
     }
@@ -125,7 +126,7 @@ export {
     getBox, 
     isSolved,
     getRowColBoxNum,
-    getCandidatesFromIndices,
+    getCandidates,
     setUnion,
     setIntersection,
     setDifference
