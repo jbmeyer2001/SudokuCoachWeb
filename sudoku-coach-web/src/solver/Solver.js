@@ -4,8 +4,8 @@ import soleCandidate from './SoleCandidate.js'
 import uniqueCandidate from './UniqueCandidate.js'
 import blockRowCol from './BlockRowCol.js'
 //import blockBlock from './BlockBlock.js'
-//import nakedSubset from './NakedSubset.js'
-//import hiddenSubset from './HiddenSubset.js'
+import nakedSubset from './NakedSubset.js'
+import hiddenSubset from './HiddenSubset.js'
 import XWing from './XWing.js'
 //import YWing from './YWing.js'
 
@@ -96,6 +96,16 @@ function getNextStep() {
         return step;
     }
 
+    step = nakedSubset(candidates, unfilled, removeMultipleCandidates);
+    if (step.step != "NOSTEP") {
+        return step;
+    }
+
+    step = hiddenSubset(candidates, unfilled, removeMultipleCandidates);
+    if (step.step != "NOSTEP") {
+        return step;
+    }
+
     step = XWing(candidates, removeCandidates);
     if (step.step != "NOSTEP") {
         return step;
@@ -131,6 +141,10 @@ function removeCandidates(affectedSpaces, val) {
     for (const space of it) {
         candidates[space].delete(val);
     }
+}
+
+function removeMultipleCandidates(affectedSpaces, values) {
+
 }
 
 export { board, candidates, unfilled, generateCandidates, getNextStep, check, insertTypedVal};
