@@ -110,7 +110,7 @@ function getNextStep() {
     if (step.step != "NOSTEP") {
         return step;
     }
-
+    
     return step;
 }
 
@@ -137,14 +137,20 @@ function insertVal (row, col, val) {
 
 function removeCandidates(affectedSpaces, val) {
     let it = affectedSpaces[Symbol.iterator]();
-
     for (const space of it) {
         candidates[space].delete(val);
     }
 }
 
 function removeMultipleCandidates(affectedSpaces, values) {
+    let spaces = affectedSpaces[Symbol.iterator]();
+    let vals = values[Symbol.iterator]();
 
+    for (const space of spaces) {
+        for (const val of vals) {
+            candidates[space].delete(val);
+        }
+    }
 }
 
 export { board, candidates, unfilled, generateCandidates, getNextStep, check, insertTypedVal};

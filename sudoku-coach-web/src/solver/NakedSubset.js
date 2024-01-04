@@ -1,18 +1,17 @@
-import { getCandidates } from "./Utility";
-import {getRow, getCol, getBox, setIntersection, setDifference} from './Utility.js'
+import {getRow, getCol, getBox, setIntersection, setDifference, getCandidates, setEquivalent} from './Utility.js'
 
 function nakedSubset(candidates, unfilled, removeCandidates) {
     let affectedSpaces = new Set();
     let curCandidates = new Set();
-
+    
     for (let i = 0; i < 9; i++) {
-        let spaces = setIntersection(unfilled, getRow(Math.trunc(i / 3)));
+        let spaces = setIntersection(unfilled, getRow(i));
         
         if (spaces.size >=4 && CheckForSubset(spaces)) {
             return {
                 step: "NAKEDSUBSET",
                 set: "ROW",
-                row: Math.trunc(i / 3),
+                row: i,
                 affectedSpaces: affectedSpaces,
                 removalCandidates: curCandidates,
                 candidates: candidates
@@ -21,13 +20,13 @@ function nakedSubset(candidates, unfilled, removeCandidates) {
     }
 
     for (let i = 0; i < 9; i++) {
-        let spaces = setIntersection(unfilled, getCol(Math.trunc(i / 3)));
+        let spaces = setIntersection(unfilled, getCol(i));
         
         if (spaces.size >=4 && CheckForSubset(spaces)) {
             return {
                 step: "NAKEDSUBSET",
                 set: "COL",
-                col: Math.trunc(i / 3),
+                col: i,
                 affectedSpaces: affectedSpaces,
                 removalCandidates: curCandidates,
                 candidates: candidates
@@ -36,13 +35,13 @@ function nakedSubset(candidates, unfilled, removeCandidates) {
     }
 
     for (let i = 0; i < 9; i++) {
-        let spaces = setIntersection(unfilled, getBox(Math.trunc(i / 3)));
+        let spaces = setIntersection(unfilled, getBox(i));
         
         if (spaces.size >=4 && CheckForSubset(spaces)) {
             return {
                 step: "NAKEDSUBSET",
                 set: "BOX",
-                box: Math.trunc(i / 3),
+                box: i,
                 affectedSpaces: affectedSpaces,
                 removalCandidates: curCandidates,
                 candidates: candidates
@@ -56,6 +55,8 @@ function nakedSubset(candidates, unfilled, removeCandidates) {
 
     function CheckForSubset(spaces) {
         let spacesArr = Array.from(spaces);
+        console.log("\n");
+        console.log(spacesArr);
 
         for (let i = 0; i < spacesArr.length - 1; i++) {
             let candidatesi = candidates[spacesArr[i]];
@@ -64,12 +65,11 @@ function nakedSubset(candidates, unfilled, removeCandidates) {
 
             for (let j = i + 1; j < spacesArr.length; j++) {
                 let candidatesj = candidates[spacesArr[j]];
-
-                if (candidatesi == candidatesj) {
+                if (setEquivalent(candidatesi, candidatesj)) {
                     equivalentSpaces.add(spacesArr[j]);
                 }
             }
-
+            console.log([i, Array.from(candidatesi), Array.from(equivalentSpaces)]);
             curCandidates = candidatesi;
             if (curCandidates.size == equivalentSpaces.size) {
                 affectedSpaces = setDifference(spaces, equivalentSpaces);

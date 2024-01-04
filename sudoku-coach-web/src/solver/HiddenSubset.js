@@ -5,13 +5,13 @@ function hiddenSubset(candidates, unfilled, removeCandidates) {
     let curCandidates = new Set();
 
     for (let i = 0; i < 9; i++) {
-        let spaces = setIntersection(unfilled, getRow(Math.trunc(i / 3)));
+        let spaces = setIntersection(unfilled, getRow(i));
         
         if (spaces.size >=4 && CheckForSubset(spaces)) {
             return {
                 step: "HIDDENSUBSET",
                 set: "ROW",
-                row: Math.trunc(i / 3),
+                row: i,
                 affectedSpaces: affectedSpaces,
                 removalCandidates: curCandidates,
                 candidates: candidates
@@ -20,13 +20,13 @@ function hiddenSubset(candidates, unfilled, removeCandidates) {
     }
 
     for (let i = 0; i < 9; i++) {
-        let spaces = setIntersection(unfilled, getCol(Math.trunc(i / 3)));
+        let spaces = setIntersection(unfilled, getCol(i));
         
         if (spaces.size >=4 && CheckForSubset(spaces)) {
             return {
                 step: "HIDDENSUBSET",
                 set: "COL",
-                col: Math.trunc(i / 3),
+                col: i,
                 affectedSpaces: affectedSpaces,
                 removalCandidates: curCandidates,
                 candidates: candidates
@@ -35,13 +35,13 @@ function hiddenSubset(candidates, unfilled, removeCandidates) {
     }
 
     for (let i = 0; i < 9; i++) {
-        let spaces = setIntersection(unfilled, getBox(Math.trunc(i / 3)));
+        let spaces = setIntersection(unfilled, getBox(i));
         
         if (spaces.size >=4 && CheckForSubset(spaces)) {
             return {
                 step: "HIDDENSUBSET",
                 set: "BOX",
-                box: Math.trunc(i / 3),
+                box: i,
                 affectedSpaces: affectedSpaces,
                 removalCandidates: curCandidates,
                 candidates: candidates
@@ -54,7 +54,7 @@ function hiddenSubset(candidates, unfilled, removeCandidates) {
     }
 
     function CheckForSubset(spaces) {
-        let mask;
+        let mask = 2;
         let spacesArr = Array.from(spaces);
 
         let partition = getNextPartition();
@@ -85,17 +85,18 @@ function hiddenSubset(candidates, unfilled, removeCandidates) {
             do {
                 flag = false;
                 cur = mask + 1;
+                
                 //we've gotten larger than the size of spaces, return an empty set indicating we're done.
-                if(cur >= Math.pow(2, spacesArr.size) - 1) {
-
+                if(cur >= Math.pow(2, spacesArr.length) - 1) {
+                    return retval;
                 }
-
+                
                 //bit mask for generating partition
-                for(let i = 0; i < spacesArr.size; i++) {
+                for(let i = 0; i < spacesArr.length; i++) {
                     let check = Math.pow(2, i);
 
                     if ((mask & check) == check) {
-                        retval.insert(spacesArr[i]);
+                        retval.add(spacesArr[i]);
                     }
                 }
 

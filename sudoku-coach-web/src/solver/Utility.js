@@ -120,6 +120,22 @@ function setDifference(set1, set2) {
     return retval;
 }
 
+//calling (set1 == set2) where set1 contains the same exact elements as set2 seems to return false in Javascript
+//this is a bit different than what I'm used to with C++. There *could* be something else that I'm missing,
+//but I'm making this setEquivalent function to check for set equality because it seems Javascript doesn't
+//have that does what I need.
+function setEquivalent(set1, set2) {
+    if (set1.size != set2.size) {
+        return false;
+    }
+
+    if (setDifference(set1, set2).size > 0) {
+        return false;
+    }
+
+    return true;
+}
+
 export {
     getRow, 
     getCol, 
@@ -129,5 +145,6 @@ export {
     getCandidates,
     setUnion,
     setIntersection,
-    setDifference
+    setDifference,
+    setEquivalent
 };
