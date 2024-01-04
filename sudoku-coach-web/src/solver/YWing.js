@@ -36,7 +36,7 @@ function YWing(candidates, removeCandidates) {
         //remove the spaces from the possible y-wing spaces that don't share a candidate with the current space
         let wingSpacesArr = Array.from(wingSpacesSet);
         for (let i = 0; i < wingSpacesArr.length; i++) {
-            if (!setIntersection(curCandidates, candidates[wingSpacesArr[i]])){
+            if (setIntersection(curCandidates, candidates[wingSpacesArr[i]]).size != 1){
                 wingSpacesSet.delete(wingSpacesArr[i]);
             }
         }
