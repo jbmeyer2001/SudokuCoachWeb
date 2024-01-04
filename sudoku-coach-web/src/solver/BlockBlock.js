@@ -40,7 +40,7 @@ function blockBLock(candidates, removeCandidates) {
 
         let row1And2Remove = setIntersection(rowBox1.row1And2Comm, rowBox2.row1And2Comm);
         let row1And3Remove = setIntersection(rowBox1.row1And3Comm, rowBox2.row1And3Comm);
-        let row2And3Remove = setIntersection(rowBox1.row2And3Comm, rowBox2.col2And3Comm);
+        let row2And3Remove = setIntersection(rowBox1.row2And3Comm, rowBox2.row2And3Comm);
         let col1And2Remove = setIntersection(colBox1.col1And2Comm, colBox2.col1And2Comm);
         let col1And3Remove = setIntersection(colBox1.col1And3Comm, colBox2.col1And3Comm);
         let col2And3Remove = setIntersection(colBox1.col2And3Comm, colBox2.col2And3Comm);

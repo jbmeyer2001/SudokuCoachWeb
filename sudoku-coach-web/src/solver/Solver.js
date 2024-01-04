@@ -10,15 +10,15 @@ import XWing from './XWing.js'
 import YWing from './YWing.js'
 
 const board = [
-    [0, 9, 0, 3, 7, 1, 4, 0, 0],
-    [3, 4, 7, 5, 2, 8, 9, 1, 6],
-    [1, 0, 0, 9, 6, 4, 0, 0, 3],
-    [2, 0, 9, 0, 4, 0, 1, 3, 0],
-    [5, 1, 0, 0, 3, 9, 0, 2, 4],
-    [0, 3, 4, 2, 1, 0, 8, 0, 9],
-    [0, 0, 3, 1, 9, 2, 0, 4, 0],
-    [9, 0, 0, 4, 5, 7, 3, 0, 1],
-    [4, 0, 1, 6, 8, 3, 0, 9, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0]
   ]
 
 const candidates = [];
@@ -156,9 +156,8 @@ function removeCandidates(affectedSpaces, val) {
 
 function removeMultipleCandidates(affectedSpaces, values) {
     let spaces = affectedSpaces[Symbol.iterator]();
-    let vals = values[Symbol.iterator]();
-
     for (const space of spaces) {
+        let vals = values[Symbol.iterator]();
         for (const val of vals) {
             candidates[space].delete(val);
         }
