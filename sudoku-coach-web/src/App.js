@@ -100,7 +100,6 @@ function App() {
 
     //update changes made to the board
     let updatedDisplayPuzzle = [...displayPuzzle];
-    console.log(step.val);
     updatedDisplayPuzzle[step.row][step.col] = step.val;
     setDisplayPuzzle(updatedDisplayPuzzle);
 

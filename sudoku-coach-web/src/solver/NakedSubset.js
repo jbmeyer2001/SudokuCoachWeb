@@ -55,8 +55,6 @@ function nakedSubset(candidates, unfilled, removeCandidates) {
 
     function CheckForSubset(spaces) {
         let spacesArr = Array.from(spaces);
-        console.log("\n");
-        console.log(spacesArr);
 
         for (let i = 0; i < spacesArr.length - 1; i++) {
             let candidatesi = candidates[spacesArr[i]];
@@ -69,7 +67,7 @@ function nakedSubset(candidates, unfilled, removeCandidates) {
                     equivalentSpaces.add(spacesArr[j]);
                 }
             }
-            console.log([i, Array.from(candidatesi), Array.from(equivalentSpaces)]);
+            
             curCandidates = candidatesi;
             if (curCandidates.size == equivalentSpaces.size) {
                 affectedSpaces = setDifference(spaces, equivalentSpaces);

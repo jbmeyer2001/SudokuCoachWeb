@@ -6,7 +6,8 @@ import blockRowCol from './BlockRowCol.js'
 import nakedSubset from './NakedSubset.js'
 import hiddenSubset from './HiddenSubset.js'
 import blockBlock from './BlockBlock.js'
-//import YWing from './YWing.js'
+import XWing from './XWing.js'
+import YWing from './YWing.js'
 
 const board = [
     [0, 9, 0, 3, 7, 1, 4, 0, 0],
@@ -97,7 +98,6 @@ function getNextStep() {
   
     step = blockBlock(candidates, removeCandidates);
     if (step.step != "NOSTEP") {
-        console.log(step);
         return step;
     }
 
@@ -115,8 +115,15 @@ function getNextStep() {
     if (step.step != "NOSTEP") {
         return step;
     }
+
+    step = YWing(candidates, removeCandidates);
+    if (step.step != "NOSTEP") {
+        return step;
+    }
     
-    return step;
+    return {
+        step: "CANTSOLVE"
+    }
 }
 
 function insertTypedVal(row, col, val) {
