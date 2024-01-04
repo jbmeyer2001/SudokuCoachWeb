@@ -3,7 +3,7 @@ import { checkPuzzle } from './CheckPuzzle.js'
 import soleCandidate from './SoleCandidate.js'
 import uniqueCandidate from './UniqueCandidate.js'
 import blockRowCol from './BlockRowCol.js'
-//import blockBlock from './BlockBlock.js'
+import blockBlock from './BlockBlock.js'
 //import nakedSubset from './NakedSubset.js'
 //import hiddenSubset from './HiddenSubset.js'
 import XWing from './XWing.js'
@@ -93,6 +93,12 @@ function getNextStep() {
 
     step = blockRowCol(candidates, removeCandidates);
     if (step.step != "NOSTEP") {
+        return step;
+    }
+
+    step = blockBlock(candidates, removeCandidates);
+    if (step.step != "NOSTEP") {
+        console.log(step);
         return step;
     }
 
