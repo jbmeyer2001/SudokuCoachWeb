@@ -3,10 +3,9 @@ import { checkPuzzle } from './CheckPuzzle.js'
 import soleCandidate from './SoleCandidate.js'
 import uniqueCandidate from './UniqueCandidate.js'
 import blockRowCol from './BlockRowCol.js'
+import nakedSubset from './NakedSubset.js'
+import hiddenSubset from './HiddenSubset.js'
 import blockBlock from './BlockBlock.js'
-//import nakedSubset from './NakedSubset.js'
-//import hiddenSubset from './HiddenSubset.js'
-import XWing from './XWing.js'
 //import YWing from './YWing.js'
 
 const board = [
@@ -95,10 +94,20 @@ function getNextStep() {
     if (step.step != "NOSTEP") {
         return step;
     }
-
+  
     step = blockBlock(candidates, removeCandidates);
     if (step.step != "NOSTEP") {
         console.log(step);
+        return step;
+    }
+
+    step = nakedSubset(candidates, unfilled, removeMultipleCandidates);
+    if (step.step != "NOSTEP") {
+        return step;
+    }
+
+    step = hiddenSubset(candidates, unfilled, removeMultipleCandidates);
+    if (step.step != "NOSTEP") {
         return step;
     }
 
@@ -106,7 +115,7 @@ function getNextStep() {
     if (step.step != "NOSTEP") {
         return step;
     }
-
+    
     return step;
 }
 
@@ -133,9 +142,19 @@ function insertVal (row, col, val) {
 
 function removeCandidates(affectedSpaces, val) {
     let it = affectedSpaces[Symbol.iterator]();
-
     for (const space of it) {
         candidates[space].delete(val);
+    }
+}
+
+function removeMultipleCandidates(affectedSpaces, values) {
+    let spaces = affectedSpaces[Symbol.iterator]();
+    let vals = values[Symbol.iterator]();
+
+    for (const space of spaces) {
+        for (const val of vals) {
+            candidates[space].delete(val);
+        }
     }
 }
 
