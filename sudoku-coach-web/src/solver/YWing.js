@@ -79,6 +79,7 @@ function YWing(candidates, removeCandidates) {
                     removeCandidates(affectedSpaces, candidate);
                     return {
                         step: "YWING",
+                        val: candidate,
                         base: baseSpace,
                         wing1: wing1,
                         wing2: wing2,

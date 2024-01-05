@@ -2,6 +2,7 @@ import {getRow, getCol, getBox, setIntersection, setDifference, getCandidates, s
 
 function nakedSubset(candidates, unfilled, removeCandidates) {
     let affectedSpaces = new Set();
+    let equivalentSpaces = new Set();
     let curCandidates = new Set();
     
     for (let i = 0; i < 9; i++) {
@@ -12,6 +13,7 @@ function nakedSubset(candidates, unfilled, removeCandidates) {
                 step: "NAKEDSUBSET",
                 set: "ROW",
                 row: i,
+                patternSpaces: equivalentSpaces,
                 affectedSpaces: affectedSpaces,
                 removalCandidates: curCandidates,
                 candidates: candidates
@@ -27,6 +29,7 @@ function nakedSubset(candidates, unfilled, removeCandidates) {
                 step: "NAKEDSUBSET",
                 set: "COL",
                 col: i,
+                patternSpaces: equivalentSpaces,
                 affectedSpaces: affectedSpaces,
                 removalCandidates: curCandidates,
                 candidates: candidates
@@ -42,6 +45,7 @@ function nakedSubset(candidates, unfilled, removeCandidates) {
                 step: "NAKEDSUBSET",
                 set: "BOX",
                 box: i,
+                patternSpaces: equivalentSpaces,
                 affectedSpaces: affectedSpaces,
                 removalCandidates: curCandidates,
                 candidates: candidates
@@ -58,7 +62,7 @@ function nakedSubset(candidates, unfilled, removeCandidates) {
 
         for (let i = 0; i < spacesArr.length - 1; i++) {
             let candidatesi = candidates[spacesArr[i]];
-            let equivalentSpaces = new Set();
+            equivalentSpaces = new Set();
             equivalentSpaces.add(spacesArr[i]);
 
             for (let j = i + 1; j < spacesArr.length; j++) {
