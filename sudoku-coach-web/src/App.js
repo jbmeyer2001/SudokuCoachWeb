@@ -4,6 +4,28 @@ import { useState } from "react";
 import { generateCandidates, getNextStep, check, insertTypedVal, clearBoard } from './solver/Solver.js'
 import { getRow, getCol, getBox, getRowColBoxNum, setUnion } from './solver/Utility.js'
 
+import { 
+  displaySoleCandidate, 
+  displayUniqueCandidate, 
+  displayBlockRowCol,
+  displayBlockBlock,
+  displayNakedSubset,
+  displayHiddenSubset,
+  displayXWing,
+  displayYWing
+} from './display/Color.js'
+
+import {
+  textDisplaySoleCandidate,
+  textDisplayUniqueCandidate,
+  textDisplayBlockRowCol,
+  textDisplayBlockBlock,
+  textDisplayNakedSubset,
+  textDisplayHiddenSubset,
+  textDisplayXWing,
+  textDisplayYWing
+} from './display/Text.js'
+
 var displayStep = true;
 var step;
 
@@ -99,49 +121,68 @@ function App() {
   function handleNextStep() {
     if (displayStep) {
       step = getNextStep();
-    }
 
-    switch(step.step) {
-      case "SOLVED":
-        handleSolved();
-        break;
-      case "SOLECANDIDATE":
-        if(displayStep) {displaySoleCandidate(step);} else {handleSoleCandidate(step);}
-        setStepText("sole candidate");
-        break;
-      case "UNIQUECANDIDATE":
-        if(displayStep) {displayUniqueCandidate(step);} else {handleUniqueCandidate(step);}
-        setStepText("unique candidate");
-        break;
-      case "BLOCKROWCOL":
-        if(displayStep)  {displayBlockRowCol(step);} else {handleBlockRowCol(step);}
-        setStepText("block row col");
-        break;
-      case "BLOCKBLOCK":
-        if(displayStep) {displayBlockBlock(step);} else {handleBlockBlock(step);}
-        setStepText("block block");
-        break;
-      case "NAKEDSUBSET":
-        if(displayStep) {displayNakedSubset(step);} else {handleNakedSubset(step);}
-        setStepText("naked subset");
-        break;
-      case "HIDDENSUBSET":
-        if(displayStep) {displayHiddenSubset(step);} else {handleHiddenSubset(step);}
-        setStepText("hidden subset");
-        break;
-      case "XWING":
-        if(displayStep) {displayXWing(step);} else {handleXWing(step);}
-        setStepText("x-wing");
-        break;
-      case "YWING":
-        if(displayStep) {displayYWing(step);} else {handleYWing(step);}
-        setStepText("y-wing");
-        break;
-      default:
-        alert("there was no step!");
-        break;
+      switch(step.step) {
+        case "SOLVED":
+          handleSolved();
+          break;
+        case "SOLECANDIDATE":
+          displaySoleCandidate(step, updateDisplaySpace, updateDisplayCandidate);
+          textDisplaySoleCandidate(step, setStepText);
+          break;
+        case "UNIQUECANDIDATE":
+          displayUniqueCandidate(step, updateDisplaySpace, updateDisplayCandidate);
+          textDisplayUniqueCandidate(step, setStepText);
+          break;
+        case "BLOCKROWCOL":
+          displayBlockRowCol(step, updateDisplaySpace, updateDisplayCandidate);
+          textDisplayBlockRowCol(step, setStepText);
+          break;
+        case "BLOCKBLOCK":
+          displayBlockBlock(step, updateDisplaySpace, updateDisplayCandidate);
+          textDisplayBlockBlock(step, setStepText)
+          break;
+        case "NAKEDSUBSET":
+          displayNakedSubset(step, updateDisplaySpace, updateDisplayCandidate);
+          textDisplayNakedSubset(step, setStepText);
+          break;
+        case "HIDDENSUBSET":
+          displayHiddenSubset(step, updateDisplaySpace, updateDisplayCandidate);
+          textDisplayHiddenSubset(step, setStepText);
+          break;
+        case "XWING":
+          displayXWing(step, updateDisplaySpace, updateDisplayCandidate);
+          textDisplayXWing(step, setStepText);
+          break;
+        case "YWING":
+          displayYWing(step, updateDisplaySpace, updateDisplayCandidate);
+          textDisplayYWing(step, setStepText);
+          break;
+        default:
+          alert("there was no step!");
+          /*TODO: do something more here*/
+          break;
+      }
     }
-
+    else {
+      switch(step.step) {
+        case "SOLECANDIDATE":
+        case "UNIQUECANDIDATE":
+          document.getElementById(step.row * 9 + step.col).value = step.val;
+        case "BLOCKROWCOL":
+        case "BLOCKBLOCK":
+        case "NAKEDSUBSET":
+        case "HIDDENSUBSET":
+        case "XWING":
+        case "YWING":
+          updateAllCandidates(step.candidates);
+          clearDisplayColors();
+          break;
+        default:
+          alert("there was no step!");
+          break;
+      }
+    }
     displayStep = !displayStep;
   }
 
@@ -195,123 +236,6 @@ function App() {
         setDisplaySpaceRed(updateDisplaySpaceRed);
         break
     }
-  }
-
-  function displaySoleCandidate(step) {
-    let index = step.row * 9 + step.col;
-    let [box] = getRowColBoxNum(index, ["box"]);
-
-    updateDisplaySpace(index, "GREEN");
-    updateDisplayCandidate(index, step.val, "BLUE");
-
-    //I always check for 'blue' or 'green' first when deciding color, so it's okay that both 
-    //displayCandidateBlue and displayCandidateRed have the index in the set at step.val
-    let redCandidates = Array.from(setUnion([getRow(step.row), getCol(step.col), getBox(box)]));
-    for (let i = 0; i < redCandidates.length; i++) {
-      updateDisplayCandidate(redCandidates[i], step.val, "RED");
-    }
-  }
-
-  function displayUniqueCandidate(step) {
-    let index = step.row * 9 + step.col;
-    let [box] = getRowColBoxNum(index, ["box"]);
-
-    switch (step.set) {
-      case "ROW":
-        var greenSpaces = Array.from(getRow(step.row));
-        break;
-      case "COL":
-        var greenSpaces = Array.from(getCol(step.col));
-        break;
-      case "BOX":
-        var greenSpaces = Array.from(getBox(box));      
-        break;
-    }
-    for (let i = 0; i < greenSpaces.length; i++) {
-      updateDisplaySpace(greenSpaces[i], "GREEN");
-    }
-    
-    updateDisplayCandidate(index, step.val, "BLUE");
-
-    //I always check for 'blue' or 'green' first when deciding color, so it's okay that both 
-    //displayCandidateBlue and displayCandidateRed have the index in the set at step.val
-    let redCandidates = Array.from(setUnion([getRow(step.row), getCol(step.col), getBox(box)]));
-    for (let i = 0; i < redCandidates.length; i++) {
-      updateDisplayCandidate(redCandidates[i], step.val, "RED");
-    }
-  }
-
-  function displayBlockRowCol(step) {
-
-  }
-
-  function displayBlockBlock(step) {
-    
-  }
-
-  function displayNakedSubset(step) {
-
-  }
-
-  function displayHiddenSubset(step) {
-
-  }
-
-  function displayXWing(step) {
-
-  }
-
-  function displayYWing(step) {
-
-  }
-
-  function handleSoleCandidate(step) {
-    //update any candidates
-    updateAllCandidates(step.candidates);
-
-    //update value
-    document.getElementById(step.row * 9 + step.col).value = step.val;
-    clearDisplayColors();
-  }
-
-  function handleUniqueCandidate(step) {
-    //update any candidates
-    updateAllCandidates(step.candidates);
-
-    //update value
-    document.getElementById(step.row * 9 + step.col).value = step.val;
-    clearDisplayColors();
-  }
-
-  function handleBlockRowCol(step) {
-    //update any candidates
-    updateAllCandidates(step.candidates);
-    clearDisplayColors();
-  }
-
-  function handleBlockBlock(step) {
-    updateAllCandidates(step.candidates);
-    clearDisplayColors();
-  }
-
-  function handleNakedSubset(step) {
-    updateAllCandidates(step.candidates);
-    clearDisplayColors();
-  }
-
-  function handleHiddenSubset(step) {
-    updateAllCandidates(step.candidates);
-    clearDisplayColors();
-  }
-
-  function handleXWing(step) {
-    updateAllCandidates(step.candidates);
-    clearDisplayColors();
-  }
-
-  function handleYWing(step) {
-    updateAllCandidates(step.candidates);
-    clearDisplayColors();
   }
 
   function updateAllCandidates(newCandidates) {
