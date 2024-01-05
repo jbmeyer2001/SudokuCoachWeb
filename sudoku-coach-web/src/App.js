@@ -54,6 +54,7 @@ function App() {
 
   function handleResetPuzzle() {
     clearBoard();
+    clearDisplayColors();
     
     let updatedAllCandidates = [...allCandidates];
     for (let i = 0; i < 9; i++) {
@@ -296,7 +297,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Sudoku</h1>
+      <h1>Sudoku Coach</h1>
       <button onClick={() => {if(window.confirm('reset the puzzle?')){handleResetPuzzle();}}}>Reset Puzzle</button>
       <button onClick={handleSubmitPuzzle} disabled={solving}>Submit Puzzle</button>
       <button onClick={handleNextStep} disabled={!solving}>Next Step</button>
@@ -308,7 +309,7 @@ function App() {
             row.map((val, valIndex) =>
               <div class="boardCell">
                 <input type="number" onChange={editValue} disabled={solving} id={rowIndex * 9 + valIndex} style={{background:getBackgroundColor(rowIndex * 9 + valIndex)}}></input>
-                <table style={{top: getRowTop(rowIndex)}}>
+                <table>
                   <tr>
                     <th style={{color:getCandidateColor(1, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(1) ? 1 : ''}</th>
                     <th style={{color:getCandidateColor(2, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(2) ? 2 : ''}</th>

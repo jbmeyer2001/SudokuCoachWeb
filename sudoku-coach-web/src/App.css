@@ -2,45 +2,10 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .board {
   display: table;
-  height: 900px;
-  width: 900px;
+  height: 675px;
+  width: 675px;
   margin: auto;
   border: 2px solid black;
   border-collapse: collapse;
@@ -53,6 +18,9 @@
 }
 
 .boardCell {
+  height: 75px;
+  width: 75px;
+  position: relative;
   display: table-cell;
   border: 2px solid black;
   border-collapse: collapse;
@@ -76,29 +44,26 @@
 
 table {
   position: absolute;
-  height: 90px;
-  width: 90px;
   z-index: -1;
 }
 
-tr {
-  height: 30px;
-}
-
 th {
-  width: 30px;
-  font-family:'Times New Roman', Times, serif;
+  height: 20px;
+  width: 20px;
   font-weight: bold;
+  font-family:'Times New Roman', Times, serif;
 }
 
 input[type=number] {
-  position:relative;
-  width: 91px;
-  height: 93px;
+  position:absolute;
+  left: 0;
+  height: 74px;
+  width: 69px;
   background: none;
-  font-size: 60px;
+  font-size: 40px;
   text-align: center;
   font-family: "Times New Roman", Times, serif;
+  border:none;
 }
 
 /*from https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp*/
@@ -119,10 +84,10 @@ input[type=number]:disabled {
 }
 
 button {
-  width: 175px;
-  height: 50px;
+  width: 125px;
+  height: 30px;
   margin: 10px 50px;
-  font-size: 25px;
+  font-size: 18px;
   font-family: "Times New Roman", Times, serif;
   border: 2px solid green;
 }
