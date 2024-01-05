@@ -1,5 +1,5 @@
-import { getRow, getCol, getBox, getRowColBoxNum } from './Utility.js'
-import { checkPuzzle } from './CheckPuzzle.js'
+import { copyBoard, getRow, getCol, getBox, getRowColBoxNum, isSolved } from './Utility.js'
+import { checkPuzzle, isValid } from './CheckPuzzle.js'
 import soleCandidate from './SoleCandidate.js'
 import uniqueCandidate from './UniqueCandidate.js'
 import blockRowCol from './BlockRowCol.js'
@@ -19,14 +19,48 @@ const board = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0]
-  ]
+]
 
 const candidates = [];
 
 const unfilled = new Set();
 
 function check() {
-    checkPuzzle(board);
+    
+    //ensure the puzzle is valid
+    if (!isValid(board)) {
+        return "INVALID";
+    }
+
+    //generate candidates
+    generateCandidates();
+
+    //try solving with our algorithmic solving method
+    let saveBoard = [[], [], [], [], [], [], [], [], []];
+    copyBoard(board, saveBoard);
+    let step;
+    do {
+        step = getNextStep();
+    } while (step.step != "CANTSOLVE" && step.step != "SOLVED");
+    copyBoard(saveBoard, board);
+    candidates.splice(0, candidates.length);
+    unfilled.clear();
+
+    //if we couldn't solve it algorithmically using the patterns included, see if it is possible to solve at all
+    if (step.step != "SOLVED") {
+        let solveability = checkPuzzle(board);
+
+        //if it is solveable, let the app know that we can't solve it
+        if (solveability == "SOLVEABLE") {
+            return "CANTSOLVE";
+        }
+
+        //if it isn't solveable, the 'solveability' variable has information on what the problem is
+        return solveability;
+    }
+
+    //if we've reached here, it means the puzzle is solveable with our algorithm
+    return "SOLVEABLE";
 }
 
 function generateCandidates() {
@@ -120,10 +154,16 @@ function getNextStep() {
     if (step.step != "NOSTEP") {
         return step;
     }
+
+    if (isSolved(board)) {
+        return {
+            step: "SOLVED"
+        };
+    }
     
     return {
         step: "CANTSOLVE"
-    }
+    };
 }
 
 function insertTypedVal(row, col, val) {
@@ -164,4 +204,14 @@ function removeMultipleCandidates(affectedSpaces, values) {
     }
 }
 
-export { board, candidates, unfilled, generateCandidates, getNextStep, check, insertTypedVal};
+function clearBoard() {
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            board[i][j] = 0;
+        }
+    }
+    candidates.splice(0, candidates.length);
+    unfilled.clear();
+}
+
+export { board, candidates, unfilled, generateCandidates, getNextStep, check, insertTypedVal, clearBoard};

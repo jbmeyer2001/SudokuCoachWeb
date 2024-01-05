@@ -1,12 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
-import { generateCandidates, getNextStep, check, insertTypedVal } from './solver/Solver.js'
+import { generateCandidates, getNextStep, check, insertTypedVal, clearBoard } from './solver/Solver.js'
 import { setDifference } from './solver/Utility.js'
 
 function App() {
 
-  const [displayPuzzle, setDisplayPuzzle] = useState([
+  const displayPuzzle = [
     ['', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', ''],
@@ -16,7 +16,7 @@ function App() {
     ['', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', '']
-  ]);
+  ];
 
   const initCandidates = [];
   for (let i = 0; i < 81; i++) {
@@ -26,30 +26,72 @@ function App() {
 
   const [stepText, setStepText] = useState("step!");
 
-  function handleTestButton() {
+  const [numInputDisabled, setNumInputDisabled] = useState(false);
+
+  const [nextStepBtnDisabled, setNextStepBtnDisabled] = useState(true);
+
+  const [submitPuzzleBtnDisabled, setSubmitPuzzleBtnDisabled] = useState(false);
+
+  function handleResetPuzzle() {
+    clearBoard();
+    
+    let updatedAllCandidates = [...allCandidates];
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        document.getElementById(i * 9 + j).value = '';
+      }
+    }
+    for (let i = 0; i < 81; i++) {
+      updatedAllCandidates[i].clear();
+    }
+
+    setAllCandidates(updatedAllCandidates);
+    setNumInputDisabled(false);
+    setSubmitPuzzleBtnDisabled(false);
+    setNextStepBtnDisabled(true);
+  }
+
+  function handleSubmitPuzzle() {
       let solveability = check();
 
       if (solveability == "INVALID") {
         alert("Sudoku invalid!\nThere is a duplicate in one of the rows, columns, or boxes.");
+        return;
       }
 
       if (solveability == "UNSOLVEABLE") {
         alert("Sudoku invalid!\nCheck your entered values, the given sudoku doesn't have a solution.");
+        return;
       }
 
       if (solveability == "MULTIPLESOLUTIONS") {
         alert("Sudoku invalid!\nMake sure you entered every value correctly, as there's multiple solutions to the given puzzle (which makes it invalid).");
+        return;
       }
+
+      if (solveability == "CANTSOLVE") {
+        alert("While this puzzle is a valid, solveable puzzle with a single solution, this algorithm is not capable of solving it.");
+        return;
+      }
+
+      if (solveability != "SOLVEABLE") {
+        alert("something terribly wrong has occured!");
+        return;
+      }
+      //if we've reached here, the puzzle is solveable using our algorithm
+      setNumInputDisabled(true);
+      setSubmitPuzzleBtnDisabled(true);
+      setNextStepBtnDisabled(false);
+      setAllCandidates(generateCandidates());
   }
 
-  function handleCandidatesButton() {
-    setAllCandidates(generateCandidates());
-  }
-
-  function handleStepButton() {
+  function handleNextStep() {
     let step = getNextStep();
 
     switch(step.step) {
+      case "SOLVED":
+        handleSolved();
+        break;
       case "SOLECANDIDATE":
         handleSoleCandidate(step);
         break;
@@ -80,14 +122,16 @@ function App() {
     }
   }
 
+  function handleSolved() {
+    setStepText("Solved!");
+  }
+
   function handleSoleCandidate(step) {
     //update any candidates
     updateAllCandidates(step.candidates);
 
-    //update changes made to the board
-    let updatedDisplayPuzzle = [...displayPuzzle];
-    updatedDisplayPuzzle[step.row][step.col] = step.val;
-    setDisplayPuzzle(updatedDisplayPuzzle);
+    //update value
+    document.getElementById(step.row * 9 + step.col).value = step.val;
 
     /*TODO: update text output*/
     //update text
@@ -98,10 +142,8 @@ function App() {
     //update any candidates
     updateAllCandidates(step.candidates);
 
-    //update changes made to the board
-    let updatedDisplayPuzzle = [...displayPuzzle];
-    updatedDisplayPuzzle[step.row][step.col] = step.val;
-    setDisplayPuzzle(updatedDisplayPuzzle);
+    //update value
+    document.getElementById(step.row * 9 + step.col).value = step.val;
 
     /*TODO: update text output*/
     //update text
@@ -183,9 +225,9 @@ function App() {
   return (
     <div className="App">
       <h1>Sudoku</h1>
-      <button onClick={handleTestButton}>test</button>
-      <button onClick={handleCandidatesButton}>candidates</button>
-      <button onClick={handleStepButton}>Step</button>
+      <button onClick={() => {if(window.confirm('reset the puzzle?')){handleResetPuzzle();}}}>Reset Puzzle</button>
+      <button onClick={handleSubmitPuzzle} disabled={submitPuzzleBtnDisabled}>Submit Puzzle</button>
+      <button onClick={handleNextStep} disabled={nextStepBtnDisabled}>Next Step</button>
       <div class="board">{
 
         displayPuzzle.map((row, rowIndex) =>
@@ -193,8 +235,7 @@ function App() {
 
             row.map((val, valIndex) =>
               <div class="boardCell">
-                <div class="value">{val}</div>
-                <input type="number" onChange={editValue} id={rowIndex * 9 + valIndex}></input>
+                <input type="number" onChange={editValue} disabled={numInputDisabled} id={rowIndex * 9 + valIndex}></input>
                 <table style={{top: getRowTop(rowIndex)}}>
                   <tr>
                     <th>{allCandidates[rowIndex * 9 + valIndex].has(1) ? 1 : ''}</th>
@@ -227,7 +268,7 @@ function App() {
 }
 
 function getRowTop(row) {
-  let val = 113 + row * 101 + Math.trunc(row / 3) * 3; //to be potentially changed later
+  let val = 155 + row * 101 + Math.trunc(row / 3) * 3; //to be potentially changed later
   return val.toString() + "px";
 }
 

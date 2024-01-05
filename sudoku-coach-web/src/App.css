@@ -89,17 +89,6 @@ th {
   width: 30px;
 }
 
-.value{
-  display: block;
-  position: absolute;
-  width: 94px;
-  height: 80px;
-  font-size: 60px;
-  padding-top: 15px;
-  padding-left: 2px;
-  font-family: "Times New Roman", Times, serif;
-}
-
 input[type=number] {
   position:relative;
   width: 91px;
@@ -122,4 +111,29 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+input[type=number]:disabled {
+  color: black;
+}
+
+button {
+  width: 175px;
+  height: 50px;
+  margin: 10px 50px;
+  font-size: 25px;
+  font-family: "Times New Roman", Times, serif;
+  border: 2px solid green;
+}
+
+button:disabled {
+  background: none;
+}
+
+button:hover {
+  background: green;
+}
+
+h1 {
+  font-family: "Times New Roman", Times, serif;
 }

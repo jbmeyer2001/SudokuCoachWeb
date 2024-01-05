@@ -3,10 +3,6 @@ import {getRow, getCol, getBox, isSolved} from './Utility.js'
 let solutions = 0;
 
 function checkPuzzle(board) {
-    if (!isValid(board)) {
-        return "INVALID";
-    }
-
     solutions = 0;
     solveRecursive(board, 0, 0);
 
@@ -97,4 +93,4 @@ function solveRecursive(puzzle, row, col) {
     puzzle[row][col] = 0;
 }
 
-export { checkPuzzle };
+export { checkPuzzle, isValid };
