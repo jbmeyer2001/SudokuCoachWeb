@@ -148,7 +148,7 @@ function blockRowCol(candidates, removeCandidates) {
                     box: box,
                     val: candidate,
                     set: "COL",
-                    col: col,
+                    col: col + 1,
                     candidates: candidates
                 };
             }
@@ -165,7 +165,7 @@ function blockRowCol(candidates, removeCandidates) {
                     box: box,
                     val: candidate,
                     set: "COL",
-                    col: col,
+                    col: col + 2,
                     candidates: candidates
                 };
             }
