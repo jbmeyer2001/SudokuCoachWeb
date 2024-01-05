@@ -58,7 +58,7 @@ function blockBLock(candidates, removeCandidates) {
                     row2: row + 1,
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
-                    candidate: candidate,
+                    val: candidate,
                     candidates: candidates
                 }
             }
@@ -77,7 +77,7 @@ function blockBLock(candidates, removeCandidates) {
                     row2: row + 2,
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
-                    candidate: candidate,
+                    val: candidate,
                     candidates: candidates
                 }
             }
@@ -96,7 +96,7 @@ function blockBLock(candidates, removeCandidates) {
                     row2: row + 2,
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
-                    candidate: candidate,
+                    val: candidate,
                     candidates: candidates
                 }
             }
@@ -115,7 +115,7 @@ function blockBLock(candidates, removeCandidates) {
                     col2: col + 1,
                     box1: colBoxNum1,
                     box2: colBoxNum2,
-                    candidate: candidate,
+                    val: candidate,
                     candidates: candidates
                 }
             }
@@ -134,7 +134,7 @@ function blockBLock(candidates, removeCandidates) {
                     col2: col + 2,
                     box1: colBoxNum1,
                     box2: colBoxNum2,
-                    candidate: candidate,
+                    val: candidate,
                     candidates: candidates
                 }
             }
@@ -153,7 +153,7 @@ function blockBLock(candidates, removeCandidates) {
                     col2: col + 2,
                     box1: colBoxNum1,
                     box2: colBoxNum2,
-                    candidate: candidate,
+                    val: candidate,
                     candidates: candidates
                 }
             }

@@ -3,7 +3,9 @@ import {
     getCol,
     getBox,
     getRowColBoxNum,
-    setUnion
+    setUnion,
+    setIntersection,
+    setDifference
 } from '../solver/Utility.js'
 
 function displaySoleCandidate(step, updateSpace, updateCandidate) {
@@ -51,11 +53,54 @@ function displayUniqueCandidate(step, updateSpace, updateCandidate) {
 }
 
 function displayBlockRowCol(step, updateSpace, updateCandidate) {
+    let set;
+    switch (step.set) {
+        case "ROW":
+            set = getRow(step.row);
+            break;
+        case "COL":
+            set = getCol(step.col);
+            break;
+    }
 
+    let patternSpaces = Array.from(setIntersection(set, getBox(step.box)));
+    for (let i = 0; i < patternSpaces.length; i++) {
+        updateSpace(patternSpaces[i], "GREEN");
+        updateCandidate(patternSpaces[i], step.val, "BLUE");
+    }
+
+    let affectedSpaces = Array.from(setDifference(set, getBox(step.box)));
+    for (let i = 0; i < affectedSpaces.length; i++) {
+        updateSpace(affectedSpaces[i], "RED");
+        updateCandidate(affectedSpaces[i], step.val, "RED");
+    }
 }
 
 function displayBlockBlock(step, updateSpace, updateCandidate) {
+    //pattern spaces are the spaces within the boxes AND the columns/rows
+    let boxes = setUnion([getBox(step.box1), getBox(step.box2)]);
+    let rowcols;
+    switch(step.set) {
+        case "ROW":
+            rowcols = setUnion([getRow(step.row1), getRow(step.row2)]);
+            break;
+        case "COL":
+            rowcols = setUnion([getCol(step.col1), getCol(step.col2)]);
+            break;
+    }
 
+    let patternSpaces = Array.from(setIntersection(rowcols, boxes));
+    for (let i = 0; i < patternSpaces.length; i++) {
+        updateSpace(patternSpaces[i], "GREEN");
+        updateCandidate(patternSpaces[i], step.val, "BLUE");
+    }
+
+    //affected spaces are those within ONLY the columns/rows
+    let affectedSpaces = Array.from(setDifference(rowcols, boxes));
+    for (let i = 0; i < patternSpaces.length; i++) {
+        updateSpace(affectedSpaces[i], "RED");
+        updateCandidate(affectedSpaces[i], step.val, "RED");
+    }
 }
 
 function displayNakedSubset(step, updateSpace, updateCandidate) {

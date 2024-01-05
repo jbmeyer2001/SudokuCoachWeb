@@ -2,7 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
 import { generateCandidates, getNextStep, check, insertTypedVal, clearBoard } from './solver/Solver.js'
-import { getRow, getCol, getBox, getRowColBoxNum, setUnion } from './solver/Utility.js'
 
 import { 
   displaySoleCandidate, 
@@ -268,11 +267,11 @@ function App() {
 
   function getBackgroundColor(space) {
     if (displaySpaceGreen[0].has(space)) {
-      return "rgba(0,255,0,0.1)";
+      return "rgba(0,255,0,0.2)";
     }
 
     if (displaySpaceRed[0].has(space)) {
-      return "rgba(255,0,0.1)";
+      return "rgba(255,0,0,0.2)";
     }
 
     return "none";
