@@ -8,16 +8,30 @@ import blockBlock from './BlockBlock.js'
 import XWing from './XWing.js'
 import YWing from './YWing.js'
 
+import {
+    preset1,
+    preset2,
+    preset3,
+    preset4,
+    preset5,
+    preset6,
+    preset7,
+    preset8,
+    preset9,
+    preset10
+} from './Presets.js'
+
+
 const board = [
-    [8, 9, 0, 0, 0, 0, 0, 6, 0],
-    [0, 0, 0, 0, 0, 4, 2, 0, 1],
-    [0, 0, 4, 0, 0, 0, 0, 0, 3],
-    [9, 7, 0, 0, 8, 0, 0, 0, 0],
-    [0, 0, 0, 5, 0, 0, 0, 0, 0],
-    [0, 5, 0, 0, 6, 0, 0, 1, 0],
-    [7, 3, 0, 0, 0, 9, 6, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 5, 0],
-    [1, 0, 0, 0, 0, 2, 0, 0, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
 const candidates = [];
@@ -212,4 +226,12 @@ function clearBoard() {
     unfilled.clear();
 }
 
-export { board, candidates, unfilled, generateCandidates, getNextStep, check, insertTypedVal, clearBoard};
+function setBoard(srcBoard) {
+    copyBoard(srcBoard, board);
+}
+
+function boardSolved() {
+    return isSolved(board);
+}
+
+export { generateCandidates, getNextStep, check, insertTypedVal, clearBoard, setBoard, boardSolved};

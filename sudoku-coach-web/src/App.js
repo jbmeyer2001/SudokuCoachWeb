@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
-import { generateCandidates, getNextStep, check, insertTypedVal, clearBoard } from './solver/Solver.js'
+import { generateCandidates, getNextStep, check, insertTypedVal, clearBoard, setBoard, boardSolved } from './solver/Solver.js'
 
 import { 
   displaySoleCandidate, 
@@ -24,6 +24,20 @@ import {
   textDisplayXWing,
   textDisplayYWing
 } from './display/Text.js'
+
+import {
+  preset1,
+  preset2,
+  preset3,
+  preset4,
+  preset5,
+  preset6,
+  preset7,
+  preset8,
+  preset9,
+  preset10
+} from './solver/Presets.js'
+
 
 var displayStep = true;
 var step;
@@ -52,6 +66,8 @@ function App() {
 
   const [solving, setSolving] = useState(false);
 
+  const [stepBtnDisable, setStepBtnDisable] = useState(true);
+
   function handleResetPuzzle() {
     clearBoard();
     clearDisplayColors();
@@ -67,7 +83,53 @@ function App() {
     }
 
     setAllCandidates(updatedAllCandidates);
+    setStepBtnDisable(true);
     setSolving(false);
+    setStepText("");
+  }
+
+  function setPreset(num) {
+    let curBoard;
+    switch (num) {
+    case 1:
+      curBoard = preset1;
+      break;
+    case 2:
+      curBoard = preset2;
+      break;
+    case 3:
+      curBoard = preset3;
+      break;
+    case 4:
+      curBoard = preset4;
+      break;
+    case 5:
+      curBoard = preset5;
+      break;
+    case 6:
+      curBoard = preset6;
+      break;
+    case 7:
+      curBoard = preset7;
+      break;
+    case 8:
+      curBoard = preset8;
+      break;
+    case 9:
+      curBoard = preset9;
+      break;
+    case 10:
+      curBoard = preset10;
+      break;
+    }
+
+    setBoard(curBoard);
+
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        document.getElementById(i * 9 + j).value = (curBoard[i][j] != 0) ? curBoard[i][j] : '';
+      }
+    }
   }
 
   function handleSubmitPuzzle() {
@@ -99,6 +161,7 @@ function App() {
       }
       //if we've reached here, the puzzle is solveable using our algorithm
       setAllCandidates(generateCandidates());
+      setStepBtnDisable(false);
       setSolving(true);
   }
 
@@ -121,11 +184,7 @@ function App() {
   function handleNextStep() {
     if (displayStep) {
       step = getNextStep();
-
       switch(step.step) {
-        case "SOLVED":
-          handleSolved();
-          break;
         case "SOLECANDIDATE":
           displaySoleCandidate(step, updateDisplaySpace, updateDisplayCandidate);
           textDisplaySoleCandidate(step, setStepText);
@@ -181,6 +240,11 @@ function App() {
         default:
           alert("there was no step!");
           break;
+      }
+
+      if(boardSolved()) {
+        setStepBtnDisable(true);
+        setStepText("Solved!");
       }
     }
     displayStep = !displayStep;
@@ -298,9 +362,10 @@ function App() {
   return (
     <div className="App">
       <h1>Sudoku Coach</h1>
-      <button onClick={() => {if(window.confirm('reset the puzzle?')){handleResetPuzzle();}}}>Reset Puzzle</button>
-      <button onClick={handleSubmitPuzzle} disabled={solving}>Submit Puzzle</button>
-      <button onClick={handleNextStep} disabled={!solving}>Next Step</button>
+      <button onClick={() => {if(window.confirm('reset the puzzle?')){handleResetPuzzle();}}}>Reset</button>
+      <button onClick={handleSubmitPuzzle} disabled={solving}>Submit</button>
+      <button onClick={handleNextStep} disabled={stepBtnDisable}>Step</button>
+      <hr></hr>
       <div class="board">{
 
         displayPuzzle.map((row, rowIndex) =>
@@ -335,7 +400,26 @@ function App() {
 
       }  
       </div>
-      <h1>{stepText}</h1>
+      <p 
+        style={{
+          display: "block", 
+          height: "50px",
+          width: "500px",
+          margin: "auto"
+        }}
+      >{stepText}</p>
+      <hr></hr>
+      <button style={{margin: "5px 5px"}} onClick={() => {setPreset(1);handleSubmitPuzzle();}} disabled={solving}>preset 1</button>
+      <button style={{margin: "5px 5px"}} onClick={() => {setPreset(2);handleSubmitPuzzle();}} disabled={solving}>preset 2</button>
+      <button style={{margin: "5px 5px"}} onClick={() => {setPreset(3);handleSubmitPuzzle();}} disabled={solving}>preset 3</button>
+      <button style={{margin: "5px 5px"}} onClick={() => {setPreset(4);handleSubmitPuzzle();}} disabled={solving}>preset 4</button>
+      <button style={{margin: "5px 5px"}} onClick={() => {setPreset(5);handleSubmitPuzzle();}} disabled={solving}>preset 5</button>
+      <br></br>
+      <button style={{margin: "5px 5px"}} onClick={() => {setPreset(6);handleSubmitPuzzle();}} disabled={solving}>preset 6</button>
+      <button style={{margin: "5px 5px"}} onClick={() => {setPreset(7);handleSubmitPuzzle();}} disabled={solving}>preset 7</button>
+      <button style={{margin: "5px 5px"}} onClick={() => {setPreset(8);handleSubmitPuzzle();}} disabled={solving}>preset 8</button>
+      <button style={{margin: "5px 5px"}} onClick={() => {setPreset(9);handleSubmitPuzzle();}} disabled={solving}>preset 9</button>
+      <button style={{margin: "5px 5px"}} onClick={() => {setPreset(10);handleSubmitPuzzle();}} disabled={solving}>preset 10</button>
     </div>
   );
 }

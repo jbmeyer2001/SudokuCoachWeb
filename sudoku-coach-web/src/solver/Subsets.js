@@ -17,22 +17,19 @@ function subsets(candidates, unfilled, removeCandidates) {
     let subsetName = "";
 
     let mask;
-    let retval = {
-        step: "NOSTEP"
-    }
 
     for (let i = 0; i < 27; i++) {
         switch (i % 3) {
             case 0:
-                subsetName = "row";
+                subsetName = "ROW";
                 spaces = setIntersection(unfilled, getRow(Math.trunc(i / 3)));
                 break;
             case 1:
-                subsetName = "col";
+                subsetName = "COL";
                 spaces = setIntersection(unfilled, getCol(Math.trunc(i / 3)));
                 break;
             case 2:
-                subsetName = "box";
+                subsetName = "BOX";
                 spaces = setIntersection(unfilled, getBox(Math.trunc(i / 3)));
                 break;
         }
@@ -60,16 +57,15 @@ function subsets(candidates, unfilled, removeCandidates) {
             if(partitionCandidates.size == partition.size) {
                 if(setIntersection(otherCandidates, partitionCandidates).size > 0) {
                     removeCandidates(other, partitionCandidates);
-                    retval = {
+                    return {
                         step: "NAKEDSUBSET",
-                        set: subsetName.toUpperCase(),
+                        set: subsetName,
+                        setNum: Math.trunc(i / 3),
                         patternSpaces: partition,
                         affectedSpaces: other,
                         removalCandidates: partitionCandidates,
                         candidates: candidates
-                    }
-                    retval[subsetName] = Math.trunc(i / 3);
-                    return retval;
+                    };
                 }
             }
 
@@ -82,15 +78,15 @@ function subsets(candidates, unfilled, removeCandidates) {
             if(onlyPartitionCandidates.size == partition.size) {
                 if(partitionCandidates.size > partition.size) {
                     removeCandidates(partition, setDifference(partitionCandidates, onlyPartitionCandidates));
-                    retval =  {
+                    return  {
                         step: "HIDDENSUBSET",
-                        set: subsetName.toUpperCase(),
+                        set: subsetName,
+                        setNum: Math.trunc(i / 3),
                         affectedSpaces: partition,
+                        patternCandidates: onlyPartitionCandidates,
                         removalCandidates: setDifference(partitionCandidates, onlyPartitionCandidates),
                         candidates: candidates
-                    }
-                    retval[subsetName] = Math.trunc(i / 3);
-                    return retval;
+                    };
                 }
             }
 
@@ -98,7 +94,9 @@ function subsets(candidates, unfilled, removeCandidates) {
         }  
     }
 
-    return retval;
+    return {
+        step: "NOSTEP"
+    }
 
     function getNextPartition() {
         let retval = new Set();
