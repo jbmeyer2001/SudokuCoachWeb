@@ -2,6 +2,28 @@
   text-align: center;
 }
 
+h1 {
+  font-family: "Times New Roman", Times, serif;
+}
+
+button {
+  width: 100px;
+  height: 30px;
+  margin: 0px 40px;
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  border: 2px solid green;
+  z-index: 1;
+}
+
+button:disabled {
+  background: none;
+}
+
+button:hover {
+  background: green;
+}
+
 .board {
   display: table;
   height: 540px;
@@ -82,28 +104,6 @@ input[type=number] {
 
 input[type=number]:disabled {
   color: black;
-}
-
-button {
-  width: 100px;
-  height: 30px;
-  margin: 0px 40px;
-  font-size: 18px;
-  font-family: "Times New Roman", Times, serif;
-  border: 2px solid green;
-  z-index: 1;
-}
-
-button:disabled {
-  background: none;
-}
-
-button:hover {
-  background: green;
-}
-
-h1 {
-  font-family: "Times New Roman", Times, serif;
 }
 
 p {

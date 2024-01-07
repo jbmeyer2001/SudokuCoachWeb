@@ -29,7 +29,7 @@ function YWing(candidates, removeCandidates) {
         //then, find the spaces within those possibly affected spaces that contain only 2 candidates
         let wingSpacesSet = setIntersection(
             yWingSpaces, 
-            setUnion([getRow(row), getCol(col), getBox(box)])
+            setUnion(getRow(row), getCol(col), getBox(box))
         );
         wingSpacesSet.delete(baseSpace);
 
@@ -51,8 +51,8 @@ function YWing(candidates, removeCandidates) {
 
                 //get all the spaces that would be affected by BOTH wing1 and wing2
                 let affectedSpaces = setIntersection(
-                    setUnion([getRow(wing1Row), getCol(wing1Col), getBox(wing1Box)]),
-                    setUnion([getRow(wing2Row), getCol(wing2Col), getBox(wing2Box)])
+                    setUnion(getRow(wing1Row), getCol(wing1Col), getBox(wing1Box)),
+                    setUnion(getRow(wing2Row), getCol(wing2Col), getBox(wing2Box))
                 );
                 
                 
@@ -68,13 +68,14 @@ function YWing(candidates, removeCandidates) {
                 if (setIntersection(wing1Candidates, wing2Candidates).size != 1) {
                     continue;
                 }
-                if (setUnion([wing1Candidates, wing2Candidates, curCandidates]).size != 3) {
+                if (setUnion(wing1Candidates, wing2Candidates, curCandidates).size != 3) {
                     continue;
                 }
 
+                //if the affected spaces actually contain the value we would be able to remove, remove it
                 affectedSpaces = setDifference(affectedSpaces, wingSpacesSet);
                 let affectedCandidates = getCandidates(candidates, affectedSpaces);
-                let candidate = Array.from(setIntersection(wing1Candidates, wing2Candidates))[0];
+                let candidate = setIntersection(wing1Candidates, wing2Candidates)[Symbol.iterator]().next().value;
                 if (affectedCandidates.has(candidate)) {
                     removeCandidates(affectedSpaces, candidate);
                     return {

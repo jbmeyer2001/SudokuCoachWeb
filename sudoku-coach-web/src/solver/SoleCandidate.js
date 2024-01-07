@@ -2,33 +2,30 @@ import { getRowColBoxNum } from "./Utility";
 
 function soleCandidate(candidates, unfilled, insertVal) {
 
-    let retval = {
-        step: "NOSTEP"
-    }
-
-    let it = unfilled.entries();
-
-    for (const space of it) {
-        let index = space[0];
+    //iterate through all unfilled spaces
+    let it = unfilled[Symbol.iterator]();
+    for (const index of it) {
         let spaceCandidates = candidates[index];
 
+        //if any given space has a single candidate, we know that space must be that candidate
         if (spaceCandidates.size == 1) {
             let [row, col] = getRowColBoxNum(index, ["row", "col"]);
             let val = spaceCandidates[Symbol.iterator]().next().value;
 
             insertVal(row, col, val);
-            retval = {
+            return {
                 step: "SOLECANDIDATE",
                 row: row,
                 col: col,
                 val: val,
                 candidates: candidates
             }
-            break;
         }
     }
     
-    return retval;
+    return {
+        step: "NOSTEP"
+    };
 }
 
 export default soleCandidate;

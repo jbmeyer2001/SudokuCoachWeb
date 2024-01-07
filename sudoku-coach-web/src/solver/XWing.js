@@ -8,6 +8,8 @@ import {
 } from './Utility.js';
 
 function XWing(candidates, removeCandidates) {
+    //iterate through combinations of rows and columns that can form x-wings
+    //(pairs of rows and columns that can't share a box between the pairs)
     for (let row1 = 0; row1 <= 5; row1++) {
 
         let row2Start = (Math.trunc(row1 / 3) * 3) + 3;
@@ -28,8 +30,8 @@ function XWing(candidates, removeCandidates) {
 					sets, then that candidate may be removed from all spaces in the other row/column set.
 					*/
                     
-                    let rowSpaces = setUnion([getRow(row1), getRow(row2)]);
-                    let colSpaces = setUnion([getCol(col1), getCol(col2)]);
+                    let rowSpaces = setUnion(getRow(row1), getRow(row2));
+                    let colSpaces = setUnion(getCol(col1), getCol(col2));
                     let intSpaces = setIntersection(rowSpaces, colSpaces);
                     rowSpaces = setDifference(rowSpaces, intSpaces);
                     colSpaces = setDifference(colSpaces, intSpaces);
@@ -43,11 +45,15 @@ function XWing(candidates, removeCandidates) {
                         setIntersection(candidates[intSpacesArray[2]], candidates[intSpacesArray[3]])
                     );
 
+                    //iterate through all candidates shared by the 4 intersection spaces
                     let it = intCandidates[Symbol.iterator]();
                     for (const candidate of it) {
-                        let inRows = new Boolean(rowCandidates.has(candidate));
-                        let inCols = new Boolean(colCandidates.has(candidate));
+                        let inRows = rowCandidates.has(candidate);
+                        let inCols = colCandidates.has(candidate);
 
+                        //if the candidates exist in either the columns or the rows but not both 
+                        //(excluding all intersection spaces) then the candidates may be removed 
+                        //from the columns or rows that contain the candidate.
                         if (inRows ^ inCols) {
                             let affectedSpaces = inRows ? rowSpaces : colSpaces;
                             removeCandidates(affectedSpaces, candidate);

@@ -8,19 +8,6 @@ import blockBlock from './BlockBlock.js'
 import XWing from './XWing.js'
 import YWing from './YWing.js'
 
-import {
-    preset1,
-    preset2,
-    preset3,
-    preset4,
-    preset5,
-    preset6,
-    preset7,
-    preset8,
-    preset9,
-    preset10
-} from './Presets.js'
-
 
 const board = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -108,20 +95,22 @@ function generateCandidates() {
         }
     }
 
-    let it = unfilled.entries();
-    for(const space of it) {
-        let index = space[0]
+    let it = unfilled[Symbol.iterator]();
+    for(const index of it) {
         let [row, col, box] = getRowColBoxNum(index, ["row", "col", "box"])
 
         let all = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-        rows[row].forEach( (candidate, set) => {all.delete(candidate)} );
-        cols[col].forEach( (candidate, set) => {all.delete(candidate)} );
-        boxes[box].forEach( (candidate, set) => {all.delete(candidate)} );
+        //for each unfilled space, remove candidates that exist on the row, column, or box
+        //shared with set the given set, and set the corrosponding set in 'candidates' accordingly
+        rows[row].forEach( (candidate) => {all.delete(candidate)} );
+        cols[col].forEach( (candidate) => {all.delete(candidate)} );
+        boxes[box].forEach( (candidate) => {all.delete(candidate)} );
 
         candidates[index] = all;
     }
 
+    //return a copy to ensure state is update every time on the display
     let copyOfCandidates = [];
     for (let i = 0; i < 81; i++) {
         copyOfCandidates[i] = new Set(candidates[i]);
@@ -130,13 +119,12 @@ function generateCandidates() {
 }
 
 function getNextStep() {
-    //check if there is a sole candidate pattern
+    //look for different patterns to either place values into spaces or remove candidates
     let step = soleCandidate(candidates, unfilled, insertVal);
     if (step.step != "NOSTEP") {
         return step;
     }
 
-    //check if there is a unique candidate pattern
     step = uniqueCandidate(candidates, unfilled, insertVal);
     if (step.step != "NOSTEP") {
         return step;
@@ -173,30 +161,39 @@ function getNextStep() {
         };
     }
     
+    //if we've made it here, it means the puzzle isn't solved and this solver
+    //isn't capable of finding any new patterns.
     return {
         step: "CANTSOLVE"
     };
 }
 
+//value update from user
 function insertTypedVal(row, col, val) {
     board[row][col] = val;
 }
 
+
+//value update from solving algorithm
 function insertVal (row, col, val) {
     let index = row * 9 + col;
     let [box] = getRowColBoxNum(index, ["box"]);
 
+    //set the board state accordingly
     board[row][col] = val;
+
+    //remove the index from the unfilled spaces set
     unfilled.delete(index);
     candidates[index].clear();
 
+    //remove the value as a candidate from all spaces the current space shares a row, column, or box with
     let rowSet = getRow(row);
     let colSet = getCol(col);
     let boxSet = getBox(box);
 
-    rowSet.forEach((space, set) => {candidates[space].delete(val)});
-    colSet.forEach((space, set) => {candidates[space].delete(val)});
-    boxSet.forEach((space, set) => {candidates[space].delete(val)});
+    rowSet.forEach((space) => {candidates[space].delete(val)});
+    colSet.forEach((space) => {candidates[space].delete(val)});
+    boxSet.forEach((space) => {candidates[space].delete(val)});
 }
 
 function removeCandidates(affectedSpaces, val) {

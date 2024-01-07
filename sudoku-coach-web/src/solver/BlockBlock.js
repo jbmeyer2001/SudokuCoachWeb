@@ -1,8 +1,10 @@
 import { getRow, getCol, getBox, getRowColBoxNum, setDifference, setIntersection, getCandidates } from "./Utility";
 
-function blockBLock(candidates, removeCandidates) {
-    let boxes = [];
+function blockBlock(candidates, removeCandidates) {
+    let boxes = {};
 
+    //see https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php for how a block to block interaction works
+    //start by iterating through every box and recording which candidates occur in each row/column
     for (let box = 0; box < 9; box++) {
         let startIndex = Math.trunc(box / 3) * 27 + (box % 3) * 3;
         let [row, col] = getRowColBoxNum(startIndex, ["row", "col"]);
@@ -25,10 +27,16 @@ function blockBLock(candidates, removeCandidates) {
         boxes[box] = b;
     }
 
+    //then, iterate through each box again looking other boxes that share the row or
+    //if those two other boxes have candidates in two rows or columns, then
+    //we know in the final puzzle the values of those candidates must occur
+    //in either of the other boxes, so we can remove them from the current box
+    //in those rows or columns
     for (let box = 0; box < 9; box++) {
         let startIndex = Math.trunc(box / 3) * 27 + (box % 3) * 3;
         let [row, col] = getRowColBoxNum(startIndex, ["row", "col"]);
 
+        //get the box number of boxes that share either rows or columns with the current box
         let rowBoxNum1 = (box - (box % 3)) + ((box + 1) % 3);
         let rowBoxNum2 = (box - (box % 3)) + ((box + 2) % 3);
         let colBoxNum1 = (box + 3) % 9;
@@ -38,6 +46,7 @@ function blockBLock(candidates, removeCandidates) {
         let colBox1 = boxes[colBoxNum1];
         let colBox2 = boxes[colBoxNum2];
 
+        //define sets containing the values that we would have to remove from particular columns
         let row1And2Remove = setIntersection(rowBox1.row1And2Comm, rowBox2.row1And2Comm);
         let row1And3Remove = setIntersection(rowBox1.row1And3Comm, rowBox2.row1And3Comm);
         let row2And3Remove = setIntersection(rowBox1.row2And3Comm, rowBox2.row2And3Comm);
@@ -45,6 +54,7 @@ function blockBLock(candidates, removeCandidates) {
         let col1And3Remove = setIntersection(colBox1.col1And3Comm, colBox2.col1And3Comm);
         let col2And3Remove = setIntersection(colBox1.col2And3Comm, colBox2.col2And3Comm);
 
+        //check to see if we would actually be able to remove candidates using one of those sets
         let affectedSpaces = setDifference(getBox(box), getRow(row + 2));
         let affectedCandidates = getCandidates(candidates, affectedSpaces);
         let it = row1And2Remove[Symbol.iterator]();
@@ -165,4 +175,4 @@ function blockBLock(candidates, removeCandidates) {
     }
 }
 
-export default blockBLock;
+export default blockBlock;

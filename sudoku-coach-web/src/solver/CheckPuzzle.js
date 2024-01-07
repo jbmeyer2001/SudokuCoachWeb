@@ -1,7 +1,8 @@
-import {getRow, getCol, getBox, isSolved} from './Utility.js'
+import {getRow, getCol, getBox, isSolved, getRowColBoxNum} from './Utility.js'
 
 let solutions = 0;
 
+//try to solve the given board state recursively to see whether the puzzle is actually solveable
 function checkPuzzle(board) {
     solutions = 0;
     solveRecursive(board, 0, 0);
@@ -17,12 +18,12 @@ function checkPuzzle(board) {
     return "SOLVEABLE";
 }
 
+
 function duplicates(indices, puzzle) {
     let existingVals = new Set();
 
     for (let i = 0; i < indices.length; i++) {
-        let row = Math.trunc(indices[i] / 9);
-        let col = indices[i] % 9;
+        let [row, col] = getRowColBoxNum(indices[i], ["row", "col"]);
         let value = puzzle[row][col];
 
         //if the value is 0, keep iterating through the for loop

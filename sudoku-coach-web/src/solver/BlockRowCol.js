@@ -10,6 +10,7 @@ import {
 } from './Utility.js'
 
 function blockRowCol(candidates, removeCandidates) {
+    //iterate through every box
     for (let box = 0; box < 9; box++) {
         let startIndex = Math.trunc(box / 3) * 27 + (box % 3) * 3;
         let [row, col] = getRowColBoxNum(startIndex, ["row", "col"]);
@@ -55,6 +56,7 @@ function blockRowCol(candidates, removeCandidates) {
             row3Common, 
             getCandidates(candidates, setDifference(getBox(box), getRow(row + 2)))
         );
+
         let onlyCol1Common = setDifference(
             col1Common, 
             getCandidates(candidates, setDifference(getBox(box), getCol(col)))
@@ -68,7 +70,7 @@ function blockRowCol(candidates, removeCandidates) {
             getCandidates(candidates, setDifference(getBox(box), getCol(col + 2)))
         );
         
-        //if any of the commonalities we found allow us to remove candidates, remove them and update the candidates!
+        //if any of the commonalities we found allow us to remove candidates, remove them and update the candidates
         let affectedSpaces = setDifference(getRow(row), getBox(box));
         let affectedCandidates = getCandidates(candidates, affectedSpaces);
         let it = onlyRow1Common[Symbol.iterator]();
@@ -187,7 +189,7 @@ function setCommonalities (candidates, i1, i2, i3) {
     let common2 = setIntersection(index1Set, index3Set);
     let common3 = setIntersection(index2Set, index3Set);
 
-    return setUnion([common1, common2, common3]);
+    return setUnion(common1, common2, common3);
 }
 
 export default blockRowCol;

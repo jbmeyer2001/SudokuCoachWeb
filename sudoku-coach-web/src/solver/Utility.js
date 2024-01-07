@@ -54,6 +54,7 @@ function isSolved(puzzle) {
     return true;
 }
 
+//calculate the row and or column and or box corresponding to a given index
 function getRowColBoxNum(index, which) {
     let retval = [];
 
@@ -72,30 +73,28 @@ function getRowColBoxNum(index, which) {
     return retval;
 }
 
+//get the candidates within a specific set of indices
 function getCandidates(candidates, indices) {
     let retval = new Set();
 
-    let it = indices[Symbol.iterator]();
-    for (const index of it) {
+    indices.forEach((index) => {
         candidates[index].forEach((candidate) => {
             retval.add(candidate)
         });
-    }
+    })
     
     return retval;
 }
 
 //there is not browser compatibility for Set.prototype.union() so I'm making my own version
 //as per https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/union
-function setUnion(sets) {
+function setUnion() {
     let retval = new Set();
     
-    const it1 = sets[Symbol.iterator]();
-    for (const set of it1) {
-        const it2 = Array.from(set)[Symbol.iterator]();
-        for (const val of it2) {
+    for (let i = 0; i < arguments.length; i++) {
+        arguments[i].forEach((val) => {
             retval.add(val);
-        }
+        })
     }
 
     return retval;

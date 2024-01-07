@@ -9,15 +9,13 @@ import {
 
 function subsets(candidates, unfilled, removeCandidates) {
     let partition = new Set();
-    let partitionCandidates = new Set();
-    let other = new Set();
-    let otherCandidates = new Set();
     let spaces = new Set();
     let spacesArr = [];
     let subsetName = "";
 
     let mask;
 
+    //iterate through all possible subsets (every row, column, and box)
     for (let i = 0; i < 27; i++) {
         switch (i % 3) {
             case 0:
@@ -32,22 +30,30 @@ function subsets(candidates, unfilled, removeCandidates) {
                 subsetName = "BOX";
                 spaces = setIntersection(unfilled, getBox(Math.trunc(i / 3)));
                 break;
+            default:
+                return {
+                    step: "NOSTEP"
+                };
         }
 
+        //if the size is less than four, a meaningful naked/hidden subset cannot occur that
+        //wouldn't have already been found by unique candidate.
         if (spaces.size < 4) {
             continue;
         }
 
-        mask = 2;
-        spacesArr = Array.from(spaces);
-        partition = getNextPartition();
+        //convert to array so we can index it
+        spacesArr = Array.from(spaces); 
         
-        console.log("here " + i);
+        //use bit mask to get possible partitions of subset
+        mask = 2;
+        partition = getNextPartition(); 
+        
+        //iterate through possible partitions
         while (partition.size != 0) {
-            console.log("partition " + Array.from(partition));
-            other = setDifference(spaces, partition);
-            partitionCandidates = getCandidates(candidates, partition);
-            otherCandidates = getCandidates(candidates, other);
+            let other = setDifference(spaces, partition);
+            let partitionCandidates = getCandidates(candidates, partition);
+            let otherCandidates = getCandidates(candidates, other);
 
             /*
 			* Naked Subset
@@ -101,7 +107,7 @@ function subsets(candidates, unfilled, removeCandidates) {
     function getNextPartition() {
         let retval = new Set();
         let cur;
-        let flag = new Boolean();
+        let flag = true;
     
         do {
             flag = false;

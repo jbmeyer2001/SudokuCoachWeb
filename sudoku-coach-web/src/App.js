@@ -56,6 +56,7 @@ function App() {
     ['', '', '', '', '', '', '', '', '']
   ];
 
+  //array of sets indicating values a space could be
   const initCandidates = [];
   for (let i = 0; i < 81; i++) {
     initCandidates[i] = new Set();
@@ -63,15 +64,33 @@ function App() {
   const [allCandidates, setAllCandidates] = useState(initCandidates);
 
   const [stepText, setStepText] = useState("");
-
   const [solving, setSolving] = useState(false);
-
   const [stepBtnDisable, setStepBtnDisable] = useState(true);
 
+  //sets indicating colors different candidates should be
+  const candidateBlue = [];
+  const candidateRed = [];
+  for (let i = 1; i <= 9; i++) {
+    candidateRed[i] =  new Set();
+    candidateBlue[i] = new Set();
+  }
+  const [displayCandidateBlue, setDisplayCandidateBlue] = useState(candidateBlue);
+  const [displayCandidateRed, setDisplayCandidateRed] = useState(candidateRed);
+
+  //sets indicating colors different spaces should be
+  const spaceGreen = [];
+  const spaceRed = [];
+  spaceGreen[0] = new Set();
+  spaceRed[0] = new Set();
+  const [displaySpaceGreen, setDisplaySpaceGreen] = useState(spaceGreen);
+  const [displaySpaceRed, setDisplaySpaceRed] = useState(spaceRed);
+
   function handleResetPuzzle() {
+    //remove all displays
     clearBoard();
     clearDisplayColors();
     
+    //set both the candidate sets and the board array as empty
     let updatedAllCandidates = [...allCandidates];
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
@@ -82,108 +101,54 @@ function App() {
       updatedAllCandidates[i].clear();
     }
 
+    //enable/disable required button states, and remove discriptive text on the most recent step
     setAllCandidates(updatedAllCandidates);
     setStepBtnDisable(true);
     setSolving(false);
     setStepText("");
   }
 
-  function setPreset(num) {
-    let curBoard;
-    switch (num) {
-    case 1:
-      curBoard = preset1;
-      break;
-    case 2:
-      curBoard = preset2;
-      break;
-    case 3:
-      curBoard = preset3;
-      break;
-    case 4:
-      curBoard = preset4;
-      break;
-    case 5:
-      curBoard = preset5;
-      break;
-    case 6:
-      curBoard = preset6;
-      break;
-    case 7:
-      curBoard = preset7;
-      break;
-    case 8:
-      curBoard = preset8;
-      break;
-    case 9:
-      curBoard = preset9;
-      break;
-    case 10:
-      curBoard = preset10;
-      break;
-    }
-
-    setBoard(curBoard);
-
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {
-        document.getElementById(i * 9 + j).value = (curBoard[i][j] != 0) ? curBoard[i][j] : '';
-      }
-    }
-  }
-
   function handleSubmitPuzzle() {
       let solveability = check();
 
-      if (solveability == "INVALID") {
-        alert("Sudoku invalid!\nThere is a duplicate in one of the rows, columns, or boxes.");
-        return;
+      switch (solveability) {
+        case "INVALID":
+          alert("Sudoku invalid!\nThere is a duplicate in one of the rows, columns, or boxes.");
+          return;
+        case "UNSOLVEABLE":
+          alert("Sudoku invalid!\nCheck your entered values, the given sudoku doesn't have a solution.");
+          return;
+        case "MULTIPLESOLUTIONS":
+          alert("Sudoku invalid!\nMake sure you entered every value correctly, as there's multiple solutions to the given puzzle (which makes it invalid).");
+          return;
+        case "CANTSOLVE":
+          alert("While this puzzle is a valid, solveable puzzle with a single solution, this algorithm is not capable of solving it.");
+          return;
+        case "SOLVEABLE":
+          //the algorithm is able to solve the puzzle. Disable required buttons and allow the user to start walking through the solution.
+          setAllCandidates(generateCandidates());
+          setStepBtnDisable(false);
+          setSolving(true);
+          break;
+        default:
+          alert("**ERROR** solveability is not one of the required cases.");
       }
-
-      if (solveability == "UNSOLVEABLE") {
-        alert("Sudoku invalid!\nCheck your entered values, the given sudoku doesn't have a solution.");
-        return;
-      }
-
-      if (solveability == "MULTIPLESOLUTIONS") {
-        alert("Sudoku invalid!\nMake sure you entered every value correctly, as there's multiple solutions to the given puzzle (which makes it invalid).");
-        return;
-      }
-
-      if (solveability == "CANTSOLVE") {
-        alert("While this puzzle is a valid, solveable puzzle with a single solution, this algorithm is not capable of solving it.");
-        return;
-      }
-
-      if (solveability != "SOLVEABLE") {
-        alert("something terribly wrong has occured!");
-        return;
-      }
-      //if we've reached here, the puzzle is solveable using our algorithm
-      setAllCandidates(generateCandidates());
-      setStepBtnDisable(false);
-      setSolving(true);
   }
-
-  const candidateBlue = [];
-  const candidateRed = [];
-  for (let i = 1; i <= 9; i++) {
-    candidateRed[i] =  new Set();
-    candidateBlue[i] = new Set();
-  }
-  const [displayCandidateBlue, setDisplayCandidateBlue] = useState(candidateBlue);
-  const [displayCandidateRed, setDisplayCandidateRed] = useState(candidateRed);
-
-  const spaceGreen = [];
-  const spaceRed = [];
-  spaceGreen[0] = new Set();
-  spaceRed[0] = new Set();
-  const [displaySpaceGreen, setDisplaySpaceGreen] = useState(spaceGreen);
-  const [displaySpaceRed, setDisplaySpaceRed] = useState(spaceRed);
 
   function handleNextStep() {
+
+    /*
+      every step we either want to:
+        - Display the changes made by the pattern by setting the colors of candidates/spaces and
+      updating the text display.
+        - Remove all the colors and display only the current puzzle state (with no colors)
+    */
+    
     if (displayStep) {
+      //get the next step from the solving algorithm
       step = getNextStep();
+
+      //update color and text display according to the step
       switch(step.step) {
         case "SOLECANDIDATE":
           displaySoleCandidate(step, updateDisplaySpace, updateDisplayCandidate);
@@ -219,11 +184,11 @@ function App() {
           break;
         default:
           alert("there was no step!");
-          /*TODO: do something more here*/
           break;
       }
     }
     else {
+      //remove color display, update candidate state for every pattern, update board state for required patterns
       switch(step.step) {
         case "SOLECANDIDATE":
         case "UNIQUECANDIDATE":
@@ -250,11 +215,55 @@ function App() {
     displayStep = !displayStep;
   }
 
-  function handleSolved() {
-    setStepText("Solved!");
+  function setPreset(num) {
+    //find the preset requested
+    let curBoard;
+    switch (num) {
+    case 1:
+      curBoard = preset1;
+      break;
+    case 2:
+      curBoard = preset2;
+      break;
+    case 3:
+      curBoard = preset3;
+      break;
+    case 4:
+      curBoard = preset4;
+      break;
+    case 5:
+      curBoard = preset5;
+      break;
+    case 6:
+      curBoard = preset6;
+      break;
+    case 7:
+      curBoard = preset7;
+      break;
+    case 8:
+      curBoard = preset8;
+      break;
+    case 9:
+      curBoard = preset9;
+      break;
+    case 10:
+      curBoard = preset10;
+      break;
+    }
+
+    //set the solvers board according to the preset
+    setBoard(curBoard);
+
+    //set the display board according to the preset
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        document.getElementById(i * 9 + j).value = (curBoard[i][j] != 0) ? curBoard[i][j] : '';
+      }
+    }
   }
 
   function clearDisplayColors() {
+    //clear all display color sets so no colors are present
     let updateDisplaySpaceGreen = [...displaySpaceGreen];
     let updateDisplaySpaceRed = [...displaySpaceRed];
     updateDisplaySpaceGreen[0] = new Set();
@@ -273,6 +282,7 @@ function App() {
   }
 
   function updateDisplayCandidate(index, value, color) {
+    //update the candidate display colors set according to input params
     switch(color){
       case "BLUE":
         let updateDisplayCandidateBlue = [... displayCandidateBlue];
@@ -288,6 +298,7 @@ function App() {
   }
 
   function updateDisplaySpace(index, color) {
+    //update the space display colors set according to input params
     switch(color) {
       case "GREEN":
         let updateDisplaySpaceGreen = [...displaySpaceGreen];
@@ -303,6 +314,7 @@ function App() {
   }
 
   function updateAllCandidates(newCandidates) {
+    //set candidate state according to provided array of sets
     let copyOfCandidates = [];
     for (let i = 0; i < 81; i++) {
       copyOfCandidates[i] = new Set(newCandidates[i]);
@@ -311,15 +323,19 @@ function App() {
   }
 
   function editValue (event){
+    //when one of the number inputs changes
+    //get the row, column, and value associated with the given event
     let row = Math.trunc(event.target.id / 9);
-    let col = Math.trunc(event.target.id) % 9;
+    let col = event.target.id % 9;
     let val = document.getElementById(event.target.id).value;
 
+    //if a number was deleted, set the solver board state accordingly
     if (val == '') {
       insertTypedVal(row, col, 0);
       return;
     }
 
+    //if invalid number was added, set the input value to zero and alert user
     if (val < 1 || val > 9) {
       insertTypedVal(row, col, 0);
       document.getElementById(event.target.id).value = '';
@@ -327,10 +343,12 @@ function App() {
       return;
     }
 
+    //if we've made it here it means we can safely add the input number to the solver state
     insertTypedVal(row, col, Number(val));
   }
 
-  function getBackgroundColor(space) {
+  //set the color of the space in the App jsx according to color display sets
+  function getSpaceColor(space) {
     if (displaySpaceGreen[0].has(space)) {
       return "rgba(0,255,0,0.2)";
     }
@@ -342,6 +360,7 @@ function App() {
     return "none";
   }
 
+  ///set the color of the candidate in the App jsx according to color display sets
   function getCandidateColor(candidate, space) {
     if (displayCandidateBlue[candidate].has(space)) {
       return "blue";
@@ -352,11 +371,6 @@ function App() {
     }
     
     return "black";
-  }
-
-  function getRowTop(row) {
-    let val = 155 + row * 101 + Math.trunc(row / 3) * 3; //to be potentially changed later
-    return val.toString() + "px";
   }
 
   return (
@@ -373,7 +387,7 @@ function App() {
 
             row.map((val, valIndex) =>
               <div class="boardCell">
-                <input type="number" onChange={editValue} disabled={solving} id={rowIndex * 9 + valIndex} style={{background:getBackgroundColor(rowIndex * 9 + valIndex)}}></input>
+                <input type="number" onChange={editValue} disabled={solving} id={rowIndex * 9 + valIndex} style={{background:getSpaceColor(rowIndex * 9 + valIndex)}}></input>
                 <table>
                   <tr>
                     <th style={{color:getCandidateColor(1, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(1) ? 1 : ''}</th>
