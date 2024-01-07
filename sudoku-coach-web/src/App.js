@@ -106,6 +106,7 @@ function App() {
     setStepBtnDisable(true);
     setSolving(false);
     setStepText("");
+    displayStep = true;
   }
 
   function handleSubmitPuzzle() {
