@@ -15,6 +15,13 @@ function subsets(candidates, unfilled, removeCandidates) {
 
     let mask;
 
+    let hiddenSubset = {
+        step: "NOSTEP"
+    }
+    let nakedSubset = {
+        step: "NOSTEP"
+    }
+
     //iterate through all possible subsets (every row, column, and box)
     for (let i = 0; i < 27; i++) {
         switch (i % 3) {
@@ -60,49 +67,55 @@ function subsets(candidates, unfilled, removeCandidates) {
 			* if the number of candidates in a given paritition (of a row/column/box) is equal to the size of that subset, 
 			* those candidates cannot exist in the candidates not within that partition.
 			*/
-            if(partitionCandidates.size == partition.size) {
-                if(setIntersection(otherCandidates, partitionCandidates).size > 0) {
-                    removeCandidates(other, partitionCandidates);
-                    return {
-                        step: "NAKEDSUBSET",
-                        set: subsetName,
-                        setNum: Math.trunc(i / 3),
-                        patternSpaces: partition,
-                        affectedSpaces: other,
-                        removalCandidates: partitionCandidates,
-                        candidates: candidates
-                    };
-                }
-            }
 
             /*
 			* Hidden Subset
 			* If a number of candidates equal to the size of a partition ONLY exist within that partition, then 
 			* those partition spaces cannot be any other candidate.
 			*/
-            let onlyPartitionCandidates = setDifference(partitionCandidates, otherCandidates);
-            if(onlyPartitionCandidates.size == partition.size) {
-                if(partitionCandidates.size > partition.size) {
-                    removeCandidates(partition, setDifference(partitionCandidates, onlyPartitionCandidates));
-                    return  {
-                        step: "HIDDENSUBSET",
-                        set: subsetName,
-                        setNum: Math.trunc(i / 3),
-                        affectedSpaces: partition,
-                        patternCandidates: onlyPartitionCandidates,
-                        removalCandidates: setDifference(partitionCandidates, onlyPartitionCandidates),
-                        candidates: candidates
-                    };
+
+            /*
+            * Interestingly, every hidden subset is also a naked subset and vice versa, it just depends on which spaces
+            * are considered to be the 'partition' and which to be the 'other'. I am assuming that it makes the most
+            * semantic sense to use the pattern who has the minimum number of spaces that 'caused' the pattern.
+            * ie. a naked subset of 4 spaces which affects 2 spaces, those two spaces must contain 2 candidates
+            * which are not present in the 4 spaces and therefore can be considered a hidden subset. 
+            */
+            if(partitionCandidates.size == partition.size) {
+                if(setIntersection(otherCandidates, partitionCandidates).size > 0) {
+                    removeCandidates(other, partitionCandidates);
+                    if (partition.size < other.size) {
+                        return {
+                            step: "NAKEDSUBSET",
+                            set: subsetName,
+                            setNum: Math.trunc(i / 3),
+                            patternSpaces: partition,
+                            affectedSpaces: other,
+                            removalCandidates: partitionCandidates,
+                            candidates: candidates
+                        };
+                    }
+                    else {
+                        return {
+                            step: "HIDDENSUBSET",
+                            set: subsetName,
+                            setNum: Math.trunc(i / 3),
+                            affectedSpaces: other,
+                            patternCandidates: setDifference(otherCandidates, partitionCandidates),
+                            removalCandidates: partitionCandidates,
+                            candidates: candidates
+                        };
+                    }
                 }
             }
-
+            
             partition = getNextPartition();
         }  
     }
 
     return {
         step: "NOSTEP"
-    }
+    };
 
     function getNextPartition() {
         let retval = new Set();
