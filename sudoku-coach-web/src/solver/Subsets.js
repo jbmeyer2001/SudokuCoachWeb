@@ -12,15 +12,7 @@ function subsets(candidates, unfilled, removeCandidates) {
     let spaces = new Set();
     let spacesArr = [];
     let subsetName = "";
-
     let mask;
-
-    let hiddenSubset = {
-        step: "NOSTEP"
-    }
-    let nakedSubset = {
-        step: "NOSTEP"
-    }
 
     //iterate through all possible subsets (every row, column, and box)
     for (let i = 0; i < 27; i++) {
