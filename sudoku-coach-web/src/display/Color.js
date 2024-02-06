@@ -54,7 +54,7 @@ function displayUniqueCandidate(step, updateSpace, updateCandidate) {
     }
 }
 
-function displayBlockRowCol(step, updateSpace, updateCandidate) {
+function displayBlockRowCol(step, updateSpace, updateCandidate) { //TODO update to use affected spaces
     let set;
     switch (step.set) {
         case "ROW":
@@ -80,7 +80,7 @@ function displayBlockRowCol(step, updateSpace, updateCandidate) {
     }
 }
 
-function displayBlockBlock(step, updateSpace, updateCandidate) {
+function displayBlockBlock(step, updateSpace, updateCandidate) { //TODO update to use affected spaces
     //pattern spaces are the spaces within the boxes AND the columns/rows
     let boxes = setUnion(getBox(step.box1), getBox(step.box2));
     let rowcols;

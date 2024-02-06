@@ -1,7 +1,6 @@
-import { getRow, getCol, getBox, getRowColBoxNum, getCandidates } from "./Utility";
+import { getRow, getCol, getBox, getRowColBoxNum, getCandidates, copyCandidates } from "./Utility";
 
 function uniqueCandidate(candidates, unfilled, insertVal) {
-
     //itrate through every unfilled space
     let it = unfilled[Symbol.iterator]();
     for (const index of it) {
@@ -33,7 +32,6 @@ function uniqueCandidate(candidates, unfilled, insertVal) {
                     row: row,
                     col: col,
                     val: candidate,
-                    candidates: candidates
                 };
             }
 
@@ -45,7 +43,6 @@ function uniqueCandidate(candidates, unfilled, insertVal) {
                     row: row,
                     col: col,
                     val: candidate,
-                    candidates: candidates
                 };
             }
 
@@ -57,7 +54,6 @@ function uniqueCandidate(candidates, unfilled, insertVal) {
                     row: row,
                     col: col,
                     val: candidate,
-                    candidates: candidates
                 };
             }
         }

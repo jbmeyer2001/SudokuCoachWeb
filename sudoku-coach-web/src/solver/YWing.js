@@ -6,7 +6,8 @@ import {
     setUnion, 
     setIntersection,
     setDifference,
-    getCandidates
+    getCandidates,
+    copyCandidates
 } from "./Utility";
 
 function YWing(candidates, removeCandidates) {
@@ -85,7 +86,6 @@ function YWing(candidates, removeCandidates) {
                         wing1: wing1,
                         wing2: wing2,
                         affectedSpaces: affectedSpaces,
-                        candidates: candidates
                     }
                 }
             }

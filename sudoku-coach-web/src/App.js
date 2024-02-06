@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
-import { generateCandidates, getNextStep, check, insertTypedVal, clearBoard, setBoard, boardSolved } from './solver/Solver.js'
+import Solver from './solver/Solver.js'
 
 import { 
   displaySoleCandidate, 
@@ -37,13 +37,15 @@ import {
   preset9,
   preset10
 } from './solver/Presets.js'
-
+import { copyCandidates, getRowColBoxNum, setUnion, getRow, getCol, getBox } from './solver/Utility.js';
 
 var displayStep = true;
-var step;
+var solution = {
+  steps: undefined,
+  stepNum: undefined,
+};
 
 function App() {
-
   const displayPuzzle = [
     ['', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', ''],
@@ -87,7 +89,6 @@ function App() {
 
   function handleResetPuzzle() {
     //remove all displays
-    clearBoard();
     clearDisplayColors();
     
     //set both the candidate sets and the board array as empty
@@ -110,9 +111,16 @@ function App() {
   }
 
   function handleSubmitPuzzle() {
-      let solveability = check();
+    let solver = new Solver();
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          solver.board[i][j] = Number(document.getElementById(i * 9 + j).value);
+        }
+      }
+      solution["steps"] = solver.solve();
+      solution["stepNum"] = 1;
 
-      switch (solveability) {
+      switch (solution["steps"]) {
         case "INVALID":
           alert("Sudoku invalid!\nThere is a duplicate in one of the rows, columns, or boxes.");
           return;
@@ -125,19 +133,15 @@ function App() {
         case "CANTSOLVE":
           alert("While this puzzle is a valid, solveable puzzle with a single solution, this algorithm is not capable of solving it.");
           return;
-        case "SOLVEABLE":
-          //the algorithm is able to solve the puzzle. Disable required buttons and allow the user to start walking through the solution.
-          setAllCandidates(generateCandidates());
+        default:
+          //the puzzle is solveable
+          setAllCandidates(solution["steps"]["startCandidates"]);
           setStepBtnDisable(false);
           setSolving(true);
-          break;
-        default:
-          alert("**ERROR** solveability is not one of the required cases.");
       }
   }
 
   function handleNextStep() {
-
     /*
       every step we either want to:
         - Display the changes made by the pattern by setting the colors of candidates/spaces and
@@ -146,8 +150,8 @@ function App() {
     */
     
     if (displayStep) {
-      //get the next step from the solving algorithm
-      step = getNextStep();
+      //get the next step from the solution object
+      let step = solution["steps"][`step${solution["stepNum"]}`];
 
       //update color and text display according to the step
       switch(step.step) {
@@ -183,12 +187,20 @@ function App() {
           displayYWing(step, updateDisplaySpace, updateDisplayCandidate);
           textDisplayYWing(step, setStepText);
           break;
+        case "SOLVED":
+          setStepBtnDisable(true);
+          setStepText("Solved!");
+          break;
         default:
           alert("there was no step!");
           break;
       }
     }
     else {
+      //get the step from the solution object and increment to next step
+      let step = solution["steps"][`step${solution["stepNum"]}`];
+      solution["stepNum"]++;
+
       //remove color display, update candidate state for every pattern, update board state for required patterns
       switch(step.step) {
         case "SOLECANDIDATE":
@@ -200,17 +212,12 @@ function App() {
         case "HIDDENSUBSET":
         case "XWING":
         case "YWING":
-          updateAllCandidates(step.candidates);
+          updateAllCandidates(step);
           clearDisplayColors();
           break;
         default:
           alert("there was no step!");
           break;
-      }
-
-      if(boardSolved()) {
-        setStepBtnDisable(true);
-        setStepText("Solved!");
       }
     }
     displayStep = !displayStep;
@@ -251,9 +258,6 @@ function App() {
       curBoard = preset10;
       break;
     }
-
-    //set the solvers board according to the preset
-    setBoard(curBoard);
 
     //set the display board according to the preset
     for (let i = 0; i < 9; i++) {
@@ -314,38 +318,59 @@ function App() {
     }
   }
 
-  function updateAllCandidates(newCandidates) {
-    //set candidate state according to provided array of sets
-    let copyOfCandidates = [];
-    for (let i = 0; i < 81; i++) {
-      copyOfCandidates[i] = new Set(newCandidates[i]);
+  function updateAllCandidates(step) {
+    let newCandidates = copyCandidates(allCandidates);
+    let spaces;
+    let values;
+
+    if (step.step == "BLOCKROWCOL") {
+      let debug = 1;
+      debug++;
+      debug--;
     }
-    setAllCandidates(copyOfCandidates);
+
+    //ensure the 'values' set contains the value(s) to remove as candidate(s)
+    if (step.val === undefined) {
+      values = step.removalCandidates;
+    }
+    else {
+      values = new Set([step.val]);
+    }
+
+    //set the spaces that we will remove the candidate(s) from
+    if (step.step == "SOLECANDIDATE" || step.step == "UNIQUECANDIDATE") {
+      let [row, col, box] = getRowColBoxNum(step.row * 9 + step.col, ["row", "col", "box"]);
+      spaces = setUnion(getRow(row), getCol(col), getBox(box));
+      newCandidates[row * 9 + col].clear(); //TODO there's a bug here somewhere
+    }
+    else {
+      spaces = step.affectedSpaces;
+    }
+
+    //set candidate state according to provided array of sets
+    spaces.forEach((space) => {
+      values.forEach((value) => {
+        newCandidates[space].delete(value);
+      })
+    })
+
+    setAllCandidates(newCandidates);
   }
 
   function editValue (event){
     //when one of the number inputs changes
     //get the row, column, and value associated with the given event
-    let row = Math.trunc(event.target.id / 9);
-    let col = event.target.id % 9;
     let val = document.getElementById(event.target.id).value;
 
-    //if a number was deleted, set the solver board state accordingly
     if (val == '') {
-      insertTypedVal(row, col, 0);
       return;
     }
 
     //if invalid number was added, set the input value to zero and alert user
     if (val < 1 || val > 9) {
-      insertTypedVal(row, col, 0);
       document.getElementById(event.target.id).value = '';
       alert("inputs must be numbers between 1 and 9");
-      return;
     }
-
-    //if we've made it here it means we can safely add the input number to the solver state
-    insertTypedVal(row, col, Number(val));
   }
 
   //set the color of the space in the App jsx according to color display sets

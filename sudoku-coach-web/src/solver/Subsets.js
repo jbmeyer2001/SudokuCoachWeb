@@ -4,7 +4,8 @@ import {
     getBox,
     setIntersection,
     setDifference,
-    getCandidates
+    getCandidates,
+    copyCandidates
 } from './Utility.js'
 
 function subsets(candidates, unfilled, removeCandidates) {
@@ -84,7 +85,6 @@ function subsets(candidates, unfilled, removeCandidates) {
                             patternSpaces: partition,
                             affectedSpaces: other,
                             removalCandidates: partitionCandidates,
-                            candidates: candidates
                         };
                     }
                     else {
@@ -95,7 +95,6 @@ function subsets(candidates, unfilled, removeCandidates) {
                             affectedSpaces: other,
                             patternCandidates: setDifference(otherCandidates, partitionCandidates),
                             removalCandidates: partitionCandidates,
-                            candidates: candidates
                         };
                     }
                 }

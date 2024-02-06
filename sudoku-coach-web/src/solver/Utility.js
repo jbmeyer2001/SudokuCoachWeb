@@ -144,6 +144,15 @@ function setEquivalent(set1, set2) {
     return true;
 }
 
+//for creating a copy of an array of candidates
+function copyCandidates(candidates) {
+    let copy = [];
+    for (let i = 0; i < 81; i++){
+        copy[i] = new Set(candidates[i]);
+    }
+    return copy;
+}
+
 export {
     copyBoard,
     getRow, 
@@ -155,5 +164,6 @@ export {
     setUnion,
     setIntersection,
     setDifference,
-    setEquivalent
+    setEquivalent,
+    copyCandidates
 };
