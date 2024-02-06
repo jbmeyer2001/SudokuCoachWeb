@@ -1,4 +1,4 @@
-const { getRow, getCol, getBox, getRowColBoxNum, isSolved, copyCandidates } = require('./Utility.js');
+const { getRow, getCol, getBox, getRowColBoxNum, isSolved, copyCandidates, copyBoard } = require('./Utility.js');
 const { checkPuzzle, isValid } = require('./CheckPuzzle.js');
 const { soleCandidate } = require('./SoleCandidate.js');
 const { uniqueCandidate } = require('./UniqueCandidate.js');
@@ -34,9 +34,14 @@ class Solver {
         //generate candidates
         this.generateCandidates();
     
-        let solution = {
-            startCandidates: copyCandidates(this.candidates),
-        };
+        //create solution object
+        let solution = {}
+
+        //fill 'startBoard' in solution object with an object representation of the board
+        //create a startBoard array for this because Object.assign() only makes a shallow copy
+        let startBoard = [[], [], [], [], [], [], [], [], []];
+        copyBoard(this.board, startBoard);
+        solution["startBoard"] = Object.assign({}, startBoard);
 
         //try solving with our algorithmic solving method
         let i = 1;
