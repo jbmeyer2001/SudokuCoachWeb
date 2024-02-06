@@ -1,4 +1,4 @@
-import { getRow, getCol, getBox, getRowColBoxNum, setDifference, setIntersection, getCandidates } from "./Utility";
+import { getRow, getCol, getBox, getRowColBoxNum, setDifference, setIntersection, getCandidates, copyCandidates } from "./Utility";
 
 function blockBlock(candidates, removeCandidates) {
     let boxes = {};
@@ -69,7 +69,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
                     val: candidate,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 }
             }
         }
@@ -88,7 +88,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
                     val: candidate,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 }
             }
         }
@@ -107,7 +107,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
                     val: candidate,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 }
             }
         }
@@ -126,7 +126,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: colBoxNum1,
                     box2: colBoxNum2,
                     val: candidate,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 }
             }
         }
@@ -145,7 +145,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: colBoxNum1,
                     box2: colBoxNum2,
                     val: candidate,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 }
             }
         }
@@ -164,7 +164,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: colBoxNum1,
                     box2: colBoxNum2,
                     val: candidate,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 }
             }
         }

@@ -4,7 +4,8 @@ import {
     setUnion, 
     setIntersection,
     setDifference,
-    getCandidates
+    getCandidates,
+    copyCandidates
 } from './Utility.js';
 
 function XWing(candidates, removeCandidates) {
@@ -67,7 +68,7 @@ function XWing(candidates, removeCandidates) {
                                 inRows: inRows,
                                 intersectionSpaces: intSpaces,
                                 affectedSpaces: affectedSpaces,
-                                candidates: candidates
+                                candidates: copyCandidates(candidates)
                             };
                         }
                     }

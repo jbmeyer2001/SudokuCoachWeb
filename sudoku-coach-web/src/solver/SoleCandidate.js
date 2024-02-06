@@ -1,4 +1,4 @@
-import { getRowColBoxNum } from "./Utility";
+import { getRowColBoxNum, copyCandidates } from "./Utility";
 
 function soleCandidate(candidates, unfilled, insertVal) {
 
@@ -18,7 +18,7 @@ function soleCandidate(candidates, unfilled, insertVal) {
                 row: row,
                 col: col,
                 val: val,
-                candidates: candidates
+                candidates: copyCandidates(candidates)
             }
         }
     }

@@ -6,7 +6,8 @@ import {
     getCandidates,
     setUnion, 
     setIntersection, 
-    setDifference,  
+    setDifference,
+    copyCandidates
 } from './Utility.js'
 
 function blockRowCol(candidates, removeCandidates) {
@@ -83,7 +84,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 };
             }
         };
@@ -100,7 +101,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row + 1,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 };
             }
         };
@@ -117,7 +118,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row + 2,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 };
             }
         };
@@ -134,7 +135,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 };
             }
         };
@@ -151,7 +152,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col + 1,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 };
             }
         };
@@ -168,7 +169,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col + 2,
-                    candidates: candidates
+                    candidates: copyCandidates(candidates)
                 };
             }
         };
