@@ -85,7 +85,6 @@ function subsets(candidates, unfilled, removeCandidates) {
                             patternSpaces: partition,
                             affectedSpaces: other,
                             removalCandidates: partitionCandidates,
-                            candidates: copyCandidates(candidates)
                         };
                     }
                     else {
@@ -96,7 +95,6 @@ function subsets(candidates, unfilled, removeCandidates) {
                             affectedSpaces: other,
                             patternCandidates: setDifference(otherCandidates, partitionCandidates),
                             removalCandidates: partitionCandidates,
-                            candidates: copyCandidates(candidates)
                         };
                     }
                 }

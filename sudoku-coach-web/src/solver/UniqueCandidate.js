@@ -32,7 +32,6 @@ function uniqueCandidate(candidates, unfilled, insertVal) {
                     row: row,
                     col: col,
                     val: candidate,
-                    candidates: copyCandidates(candidates)
                 };
             }
 
@@ -44,7 +43,6 @@ function uniqueCandidate(candidates, unfilled, insertVal) {
                     row: row,
                     col: col,
                     val: candidate,
-                    candidates: copyCandidates(candidates)
                 };
             }
 
@@ -56,7 +54,6 @@ function uniqueCandidate(candidates, unfilled, insertVal) {
                     row: row,
                     col: col,
                     val: candidate,
-                    candidates: copyCandidates(candidates)
                 };
             }
         }

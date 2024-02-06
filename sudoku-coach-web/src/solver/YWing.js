@@ -86,7 +86,6 @@ function YWing(candidates, removeCandidates) {
                         wing1: wing1,
                         wing2: wing2,
                         affectedSpaces: affectedSpaces,
-                        candidates: copyCandidates(candidates)
                     }
                 }
             }

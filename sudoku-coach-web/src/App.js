@@ -37,7 +37,7 @@ import {
   preset9,
   preset10
 } from './solver/Presets.js'
-import { isSolved } from './solver/Utility.js';
+import { copyCandidates, getRowColBoxNum, setUnion, getRow, getCol, getBox } from './solver/Utility.js';
 
 var displayStep = true;
 var solution = {
@@ -212,7 +212,7 @@ function App() {
         case "HIDDENSUBSET":
         case "XWING":
         case "YWING":
-          updateAllCandidates(step.candidates);
+          updateAllCandidates(step);
           clearDisplayColors();
           break;
         default:
@@ -318,20 +318,48 @@ function App() {
     }
   }
 
-  function updateAllCandidates(newCandidates) {
-    //set candidate state according to provided array of sets
-    let copyOfCandidates = [];
-    for (let i = 0; i < 81; i++) {
-      copyOfCandidates[i] = new Set(newCandidates[i]);
+  function updateAllCandidates(step) {
+    let newCandidates = copyCandidates(allCandidates);
+    let spaces;
+    let values;
+
+    if (step.step == "BLOCKROWCOL") {
+      let debug = 1;
+      debug++;
+      debug--;
     }
-    setAllCandidates(copyOfCandidates);
+
+    //ensure the 'values' set contains the value(s) to remove as candidate(s)
+    if (step.val === undefined) {
+      values = step.removalCandidates;
+    }
+    else {
+      values = new Set([step.val]);
+    }
+
+    //set the spaces that we will remove the candidate(s) from
+    if (step.step == "SOLECANDIDATE" || step.step == "UNIQUECANDIDATE") {
+      let [row, col, box] = getRowColBoxNum(step.row * 9 + step.col, ["row", "col", "box"]);
+      spaces = setUnion(getRow(row), getCol(col), getBox(box));
+      newCandidates[row * 9 + col].clear(); //TODO there's a bug here somewhere
+    }
+    else {
+      spaces = step.affectedSpaces;
+    }
+
+    //set candidate state according to provided array of sets
+    spaces.forEach((space) => {
+      values.forEach((value) => {
+        newCandidates[space].delete(value);
+      })
+    })
+
+    setAllCandidates(newCandidates);
   }
 
   function editValue (event){
     //when one of the number inputs changes
     //get the row, column, and value associated with the given event
-    let row = Math.trunc(event.target.id / 9);
-    let col = event.target.id % 9;
     let val = document.getElementById(event.target.id).value;
 
     if (val == '') {

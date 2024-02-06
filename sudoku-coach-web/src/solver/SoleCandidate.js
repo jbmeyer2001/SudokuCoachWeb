@@ -18,7 +18,6 @@ function soleCandidate(candidates, unfilled, insertVal) {
                 row: row,
                 col: col,
                 val: val,
-                candidates: copyCandidates(candidates)
             }
         }
     }

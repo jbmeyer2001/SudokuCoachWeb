@@ -84,7 +84,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row,
-                    candidates: copyCandidates(candidates)
+                    affectedSpaces: affectedSpaces
                 };
             }
         };
@@ -101,7 +101,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row + 1,
-                    candidates: copyCandidates(candidates)
+                    affectedSpaces: affectedSpaces
                 };
             }
         };
@@ -118,7 +118,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row + 2,
-                    candidates: copyCandidates(candidates)
+                    affectedSpaces: affectedSpaces
                 };
             }
         };
@@ -135,7 +135,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col,
-                    candidates: copyCandidates(candidates)
+                    affectedSpaces: affectedSpaces
                 };
             }
         };
@@ -152,7 +152,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col + 1,
-                    candidates: copyCandidates(candidates)
+                    affectedSpaces: affectedSpaces
                 };
             }
         };
@@ -169,7 +169,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col + 2,
-                    candidates: copyCandidates(candidates)
+                    affectedSpaces: affectedSpaces
                 };
             }
         };
