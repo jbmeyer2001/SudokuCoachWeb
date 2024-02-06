@@ -1,12 +1,12 @@
-import { getRow, getCol, getBox, getRowColBoxNum, isSolved, copyCandidates } from './Utility.js'
-import { checkPuzzle, isValid } from './CheckPuzzle.js'
-import soleCandidate from './SoleCandidate.js'
-import uniqueCandidate from './UniqueCandidate.js'
-import blockRowCol from './BlockRowCol.js'
-import subsets from './Subsets.js'
-import blockBlock from './BlockBlock.js'
-import XWing from './XWing.js'
-import YWing from './YWing.js'
+const { getRow, getCol, getBox, getRowColBoxNum, isSolved, copyCandidates } = require('./Utility.js');
+const { checkPuzzle, isValid } = require('./CheckPuzzle.js');
+const { soleCandidate } = require('./SoleCandidate.js');
+const { uniqueCandidate } = require('./UniqueCandidate.js');
+const { blockRowCol } = require('./BlockRowCol.js');
+const { subsets } = require('./Subsets.js');
+const { blockBlock } = require('./BlockBlock.js');
+const { XWing } = require('./XWing.js');
+const { YWing } = require('./YWing.js');
 
 class Solver {
     constructor() {
@@ -209,4 +209,6 @@ class Solver {
     }
 }
 
-export default Solver;
+module.exports = {
+    Solver: Solver
+}

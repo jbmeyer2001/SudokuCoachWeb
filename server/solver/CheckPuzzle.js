@@ -1,4 +1,4 @@
-import {getRow, getCol, getBox, isSolved, getRowColBoxNum} from './Utility.js'
+const {getRow, getCol, getBox, isSolved, getRowColBoxNum} = require('./Utility.js');
 
 let solutions = 0;
 
@@ -94,4 +94,7 @@ function solveRecursive(puzzle, row, col) {
     puzzle[row][col] = 0;
 }
 
-export { checkPuzzle, isValid };
+module.exports = {
+    checkPuzzle: checkPuzzle,
+    isValid, isValid
+}

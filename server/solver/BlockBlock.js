@@ -1,4 +1,12 @@
-import { getRow, getCol, getBox, getRowColBoxNum, setDifference, setIntersection, getCandidates, copyCandidates } from "./Utility";
+const {
+    getRow, 
+    getCol, 
+    getBox, 
+    getRowColBoxNum, 
+    setDifference, 
+    setIntersection, 
+    getCandidates
+} = require('./Utility');
 
 function blockBlock(candidates, removeCandidates) {
     let boxes = {};
@@ -175,4 +183,6 @@ function blockBlock(candidates, removeCandidates) {
     }
 }
 
-export default blockBlock;
+module.exports = {
+    blockBlock: blockBlock
+}

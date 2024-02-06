@@ -153,17 +153,17 @@ function copyCandidates(candidates) {
     return copy;
 }
 
-export {
-    copyBoard,
-    getRow, 
-    getCol, 
-    getBox, 
-    isSolved,
-    getRowColBoxNum,
-    getCandidates,
-    setUnion,
-    setIntersection,
-    setDifference,
-    setEquivalent,
-    copyCandidates
-};
+module.exports = {
+    copyBoard: copyBoard,
+    getRow: getRow,
+    getCol: getCol,
+    getBox: getBox,
+    isSolved: isSolved,
+    getRowColBoxNum: getRowColBoxNum,
+    getCandidates: getCandidates,
+    setUnion: setUnion,
+    setEquivalent: setEquivalent,
+    setDifference: setDifference,
+    setIntersection: setIntersection,
+    copyCandidates: copyCandidates
+}

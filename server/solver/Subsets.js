@@ -1,12 +1,11 @@
-import {
+const {
     getRow,
     getCol,
     getBox,
     setIntersection,
     setDifference,
-    getCandidates,
-    copyCandidates
-} from './Utility.js'
+    getCandidates
+} = require('./Utility.js');
 
 function subsets(candidates, unfilled, removeCandidates) {
     let partition = new Set();
@@ -145,4 +144,6 @@ function subsets(candidates, unfilled, removeCandidates) {
     }
 }
 
-export default subsets;
+module.exports = {
+    subsets: subsets
+}
