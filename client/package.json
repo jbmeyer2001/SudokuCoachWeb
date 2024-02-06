@@ -1,6 +1,7 @@
 {
   "name": "sudoku-coach-web",
   "version": "0.1.0",
+  "proxy": "http://localhost:5000",
   "homepage":"https://jbmeyer2001.github.io/SudokuCoachWeb",
   "private": true,
   "dependencies": {
