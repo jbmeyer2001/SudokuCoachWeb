@@ -39,18 +39,28 @@ app.get("/puzzles/:puzzleID", (req, res) => {
 
 //POST puzzle (based on ID)
 app.post("/puzzles", jsonParser, (req, res) => {
-    //turn request body json into puzzle array
-    let puzzleBoard = [[], [], [], [], [], [], [], [], []];
-    copyBoard(req.body, puzzleBoard);
+    //try to solve the puzzle
+    let solver = new Solver();
+    copyBoard(req.body, solver.board);
+    let solution = solver.solve();
 
+    //check if solveable
+    if (typeof solution == 'string') {
+        //solution may be 'INVALID', 'UNSOLVEABLE', 'MULTIPLESOLUTIONS', or 'CANTSOLVE'
+        //in which case we should let the client know AND not add it to the puzzles
+        res.status(422).send(solution);
+        return;
+    }
+
+    //if it is solveable then...
     //get a useable puzzle id
-    //TODO CHANGE THIS!
-    let puzzleID = Object.keys(puzzles).length + 1;
-    console.log("puzzleID: " + puzzleID);
+    let puzzleID = Object.keys(puzzles).length + 1; //TODO CHANGE THIS!
 
     //add puzzle array to puzzles[] with corrosponding puzzle id
-    puzzles[puzzleID] = puzzleBoard;
+    puzzles[puzzleID] = solution;
+    console.log("puzzleID: " + puzzleID);
 
-    //send response and redirect
-    res.status(201).send("added");
+    //send response 
+    //TODO maybe send the id as well
+    res.status(201).send(solution);
 })
