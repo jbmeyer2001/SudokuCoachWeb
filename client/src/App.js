@@ -1,9 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from "react";
-import Solver from './solver/Solver.js'
 
-import { 
+/* import { 
   displaySoleCandidate, 
   displayUniqueCandidate, 
   displayBlockRowCol,
@@ -23,9 +22,9 @@ import {
   textDisplayHiddenSubset,
   textDisplayXWing,
   textDisplayYWing
-} from './display/Text.js'
+} from './display/Text.js' */
 
-import {
+/* import {
   preset1,
   preset2,
   preset3,
@@ -38,7 +37,7 @@ import {
   preset10
 } from './solver/Presets.js'
 import { copyCandidates, getRowColBoxNum, setUnion, getRow, getCol, getBox } from './solver/Utility.js';
-
+ */
 var displayStep = true;
 var solution = {
   steps: undefined,
@@ -47,25 +46,60 @@ var solution = {
 
 function App() {
 
-  const [testData, setTestData] = useState([{}]);
+  const testPuzzle = [
+    [6, 0, 0, 0, 0, 8, 0, 4, 0],
+    [0, 0, 0, 0, 4, 0, 8, 0, 0],
+    [5, 0, 0, 2, 0, 7, 0, 0, 0],
+    [0, 2, 0, 7, 0, 5, 6, 0, 3],
+    [0, 0, 0, 0, 0, 0, 0, 9, 0],
+    [0, 6, 0, 0, 0, 0, 0, 0, 0],
+    [2, 0, 1, 0, 3, 0, 7, 0, 0],
+    [0, 4, 0, 8, 0, 0, 2, 0, 0],
+    [0, 0, 0, 0, 9, 0, 0, 0, 0]
+];
+
+  const postPuzzle = (puzzle) => {
+    let bodyJSON = JSON.stringify(Object.assign({}, puzzle));
+    return fetch(`/puzzles`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: bodyJSON,
+    })
+  }
+
+  const getPuzzleIDs = async () => {
+    try {
+      const response = await fetch('/puzzles');
+      const json = await response.json();
+      return json;
+    } 
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getPuzzle = async (puzzleID) => {
+    try {
+      const response = await fetch(`/puzzles/${puzzleID}`);
+      const json = await response.json();
+      return json;
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
   
-  useEffect(() => {
-    fetch("/test").then(
-      response => response.json()
-    ).then(
-      data => {
-        setTestData(data);
-      }
-    )
-  }, [])
+  console.log(getPuzzle(11));
+  /* console.log(getPuzzleIDs());
+  console.log(getPuzzle(1));
+  console.log(postPuzzle(testPuzzle)); */
 
   return (
     <div>
-      {
-        (testData.test === 'undefined') ?
-        (<h1>loading...</h1>) :
-        (<h1>loaded</h1>)
-      }
+      <h1>not completely broken</h1>
     </div>
   )
   //const displayPuzzle = [
