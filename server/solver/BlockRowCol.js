@@ -83,7 +83,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row,
-                    affectedSpaces: new Set(affectedSpaces)
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -100,7 +100,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row + 1,
-                    affectedSpaces: new Set(affectedSpaces)
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -117,7 +117,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row + 2,
-                    affectedSpaces: new Set(affectedSpaces)
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -134,7 +134,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col,
-                    affectedSpaces: new Set(affectedSpaces)
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -151,7 +151,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col + 1,
-                    affectedSpaces: new Set(affectedSpaces)
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -168,7 +168,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col + 2,
-                    affectedSpaces: new Set(affectedSpaces)
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };

@@ -84,7 +84,7 @@ function YWing(candidates, removeCandidates) {
                         base: baseSpace,
                         wing1: wing1,
                         wing2: wing2,
-                        affectedSpaces: new Set(affectedSpaces)
+                        affectedSpaces: [...affectedSpaces.values()]
                     }
                 }
             }

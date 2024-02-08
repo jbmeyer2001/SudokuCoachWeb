@@ -81,9 +81,9 @@ function subsets(candidates, unfilled, removeCandidates) {
                             step: "NAKEDSUBSET",
                             set: subsetName,
                             setNum: Math.trunc(i / 3),
-                            patternSpaces: new Set(partition),
-                            affectedSpaces: new Set(other),
-                            removalCandidates: new Set(partitionCandidates),
+                            affectedSpaces: [...other.values()],
+                            patternSpaces: [...partition.values()],
+                            removalCandidates: [...partitionCandidates.values()]
                         };
                     }
                     else {
@@ -91,9 +91,9 @@ function subsets(candidates, unfilled, removeCandidates) {
                             step: "HIDDENSUBSET",
                             set: subsetName,
                             setNum: Math.trunc(i / 3),
-                            affectedSpaces: new Set(other),
-                            patternCandidates: new Set(setDifference(otherCandidates, partitionCandidates)),
-                            removalCandidates: new Set(partitionCandidates)
+                            affectedSpaces: [...other.values()],
+                            patternCandidates: [...setDifference(otherCandidates, partitionCandidates).values()],
+                            removalCandidates: [...partitionCandidates.values()]
                         };
                     }
                 }

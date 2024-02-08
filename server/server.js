@@ -42,6 +42,7 @@ app.post("/puzzles", jsonParser, (req, res) => {
     //try to solve the puzzle
     let solver = new Solver();
     copyBoard(req.body, solver.board);
+    
     let solution = solver.solve();
 
     //check if solveable

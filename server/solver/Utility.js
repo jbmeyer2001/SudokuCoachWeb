@@ -2,7 +2,7 @@
 function copyBoard (src, dest) {
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
-            dest[i][j] = src[i][j];
+            dest[i][j] = Number(src[i][j]);
         }
     }
 }
