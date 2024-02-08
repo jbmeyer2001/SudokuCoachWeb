@@ -65,8 +65,8 @@ function XWing(candidates, removeCandidates) {
                                 col1: col1,
                                 col2: col2,
                                 inRows: inRows,
-                                intersectionSpaces: intSpaces,
-                                affectedSpaces: affectedSpaces,
+                                intersectionSpaces: new Set(intSpaces),
+                                affectedSpaces: new Set(affectedSpaces)
                             };
                         }
                     }

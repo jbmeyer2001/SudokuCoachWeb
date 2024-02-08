@@ -6,7 +6,7 @@ import {
     setUnion,
     setIntersection,
     setDifference
-} from '../solver/Utility.js'
+} from '../Utility.js'
 
 function displaySoleCandidate(step, updateSpace, updateCandidate) {
     let index = step.row * 9 + step.col;

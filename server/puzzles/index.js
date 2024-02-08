@@ -10,16 +10,16 @@ const puzzle9 = require('./puzzle9');
 const puzzle10 = require('./puzzle10');
 
 const puzzles  = {
-    1: puzzle1,
-    2: puzzle2,
-    3: puzzle3,
-    4: puzzle4,
-    5: puzzle5,
-    6: puzzle6,
-    7: puzzle7,
-    8: puzzle8,
-    9: puzzle9,
-    10: puzzle10
+    1: puzzle1.puzzle1,
+    2: puzzle2.puzzle2,
+    3: puzzle3.puzzle3,
+    4: puzzle4.puzzle4,
+    5: puzzle5.puzzle5,
+    6: puzzle6.puzzle6,
+    7: puzzle7.puzzle7,
+    8: puzzle8.puzzle8,
+    9: puzzle9.puzzle9,
+    10: puzzle10.puzzle10
 }
 
 module.exports = {

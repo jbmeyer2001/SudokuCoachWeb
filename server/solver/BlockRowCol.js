@@ -83,7 +83,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 };
             }
         };
@@ -100,7 +100,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row + 1,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 };
             }
         };
@@ -117,7 +117,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row + 2,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 };
             }
         };
@@ -134,7 +134,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 };
             }
         };
@@ -151,7 +151,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col + 1,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 };
             }
         };
@@ -168,7 +168,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col + 2,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 };
             }
         };

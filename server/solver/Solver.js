@@ -117,12 +117,8 @@ class Solver {
             this.candidates[index] = all;
         }
     
-        //return a copy to ensure state is update every time on the display
-        let copyOfCandidates = [];
-        for (let i = 0; i < 81; i++) {
-            copyOfCandidates[i] = new Set(this.candidates[i]);
-        }
-        return copyOfCandidates;
+        //return candidates
+        return this.candidates;
     }
 
     getNextStep = () => {

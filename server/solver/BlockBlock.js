@@ -77,7 +77,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 }
             }
         }
@@ -96,7 +96,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 }
             }
         }
@@ -115,7 +115,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 }
             }
         }
@@ -134,7 +134,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: colBoxNum1,
                     box2: colBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 }
             }
         }
@@ -153,7 +153,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: colBoxNum1,
                     box2: colBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 }
             }
         }
@@ -172,7 +172,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: colBoxNum1,
                     box2: colBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: new Set(affectedSpaces)
                 }
             }
         }

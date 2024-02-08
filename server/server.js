@@ -26,7 +26,7 @@ app.get("/puzzles", (req, res) => {
 app.get("/puzzles/:puzzleID", (req, res) => {
     //check if puzzle exists in puzzles directory
     let solution = puzzles[req.params.puzzleID];
-
+    
     //if it doesn't exist send 404
     if (solution === undefined) {
         res.status(404).send("sorry, can't find puzzle!");
@@ -48,7 +48,7 @@ app.post("/puzzles", jsonParser, (req, res) => {
     if (typeof solution == 'string') {
         //solution may be 'INVALID', 'UNSOLVEABLE', 'MULTIPLESOLUTIONS', or 'CANTSOLVE'
         //in which case we should let the client know AND not add it to the puzzles
-        res.status(422).send(solution);
+        res.status(422).json({badPuzzle: solution});
         return;
     }
 
