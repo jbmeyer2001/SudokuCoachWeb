@@ -1,4 +1,4 @@
-import { 
+const { 
     getRow,
     getCol,
     getBox,
@@ -6,9 +6,8 @@ import {
     setUnion, 
     setIntersection,
     setDifference,
-    getCandidates,
-    copyCandidates
-} from "./Utility";
+    getCandidates
+} = require('./Utility');
 
 function YWing(candidates, removeCandidates) {
 
@@ -85,7 +84,7 @@ function YWing(candidates, removeCandidates) {
                         base: baseSpace,
                         wing1: wing1,
                         wing2: wing2,
-                        affectedSpaces: affectedSpaces,
+                        affectedSpaces: [...affectedSpaces.values()]
                     }
                 }
             }
@@ -97,4 +96,6 @@ function YWing(candidates, removeCandidates) {
     }
 }
 
-export default YWing;
+module.exports = {
+    YWing: YWing
+}

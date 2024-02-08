@@ -1,4 +1,12 @@
-import { getRow, getCol, getBox, getRowColBoxNum, setDifference, setIntersection, getCandidates, copyCandidates } from "./Utility";
+const {
+    getRow, 
+    getCol, 
+    getBox, 
+    getRowColBoxNum, 
+    setDifference, 
+    setIntersection, 
+    getCandidates
+} = require('./Utility');
 
 function blockBlock(candidates, removeCandidates) {
     let boxes = {};
@@ -69,7 +77,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 }
             }
         }
@@ -88,7 +96,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 }
             }
         }
@@ -107,7 +115,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: rowBoxNum1,
                     box2: rowBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 }
             }
         }
@@ -126,7 +134,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: colBoxNum1,
                     box2: colBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 }
             }
         }
@@ -145,7 +153,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: colBoxNum1,
                     box2: colBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 }
             }
         }
@@ -164,7 +172,7 @@ function blockBlock(candidates, removeCandidates) {
                     box1: colBoxNum1,
                     box2: colBoxNum2,
                     val: candidate,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 }
             }
         }
@@ -175,4 +183,6 @@ function blockBlock(candidates, removeCandidates) {
     }
 }
 
-export default blockBlock;
+module.exports = {
+    blockBlock: blockBlock
+}

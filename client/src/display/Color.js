@@ -6,7 +6,7 @@ import {
     setUnion,
     setIntersection,
     setDifference
-} from '../solver/Utility.js'
+} from '../Utility.js'
 
 function displaySoleCandidate(step, updateSpace, updateCandidate) {
     let index = step.row * 9 + step.col;
@@ -137,7 +137,7 @@ function displayHiddenSubset(step, updateSpace, updateCandidate) {
         updateSpace(space, "GREEN");
 
         for (let j = 1; j <= 9; j++) {
-            if (step.removalCandidates.has(j)) {
+            if (step.removalCandidates.includes(j)) {
                 updateCandidate(space, j, "RED");
             }
             else {

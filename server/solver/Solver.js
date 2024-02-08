@@ -1,12 +1,12 @@
-import { getRow, getCol, getBox, getRowColBoxNum, isSolved, copyCandidates } from './Utility.js'
-import { checkPuzzle, isValid } from './CheckPuzzle.js'
-import soleCandidate from './SoleCandidate.js'
-import uniqueCandidate from './UniqueCandidate.js'
-import blockRowCol from './BlockRowCol.js'
-import subsets from './Subsets.js'
-import blockBlock from './BlockBlock.js'
-import XWing from './XWing.js'
-import YWing from './YWing.js'
+const { getRow, getCol, getBox, getRowColBoxNum, isSolved, copyCandidates, copyBoard } = require('./Utility.js');
+const { checkPuzzle, isValid } = require('./CheckPuzzle.js');
+const { soleCandidate } = require('./SoleCandidate.js');
+const { uniqueCandidate } = require('./UniqueCandidate.js');
+const { blockRowCol } = require('./BlockRowCol.js');
+const { subsets } = require('./Subsets.js');
+const { blockBlock } = require('./BlockBlock.js');
+const { XWing } = require('./XWing.js');
+const { YWing } = require('./YWing.js');
 
 class Solver {
     constructor() {
@@ -34,9 +34,14 @@ class Solver {
         //generate candidates
         this.generateCandidates();
     
-        let solution = {
-            startCandidates: copyCandidates(this.candidates),
-        };
+        //create solution object
+        let solution = {}
+
+        //fill 'startBoard' in solution object with an object representation of the board
+        //create a startBoard array for this because Object.assign() only makes a shallow copy
+        let startBoard = [[], [], [], [], [], [], [], [], []];
+        copyBoard(this.board, startBoard);
+        solution["startBoard"] = Object.assign({}, startBoard);
 
         //try solving with our algorithmic solving method
         let i = 1;
@@ -112,12 +117,8 @@ class Solver {
             this.candidates[index] = all;
         }
     
-        //return a copy to ensure state is update every time on the display
-        let copyOfCandidates = [];
-        for (let i = 0; i < 81; i++) {
-            copyOfCandidates[i] = new Set(this.candidates[i]);
-        }
-        return copyOfCandidates;
+        //return candidates
+        return this.candidates;
     }
 
     getNextStep = () => {
@@ -209,4 +210,6 @@ class Solver {
     }
 }
 
-export default Solver;
+module.exports = {
+    Solver: Solver
+}

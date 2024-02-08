@@ -1,4 +1,4 @@
-import { 
+const { 
     getRow,
     getCol,
     getBox,
@@ -6,9 +6,8 @@ import {
     getCandidates,
     setUnion, 
     setIntersection, 
-    setDifference,
-    copyCandidates
-} from './Utility.js'
+    setDifference
+} = require('./Utility.js');
 
 function blockRowCol(candidates, removeCandidates) {
     //iterate through every box
@@ -84,7 +83,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -101,7 +100,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row + 1,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -118,7 +117,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "ROW",
                     row: row + 2,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -135,7 +134,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -152,7 +151,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col + 1,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -169,7 +168,7 @@ function blockRowCol(candidates, removeCandidates) {
                     val: candidate,
                     set: "COL",
                     col: col + 2,
-                    affectedSpaces: affectedSpaces
+                    affectedSpaces: [...affectedSpaces.values()]
                 };
             }
         };
@@ -193,4 +192,6 @@ function setCommonalities (candidates, i1, i2, i3) {
     return setUnion(common1, common2, common3);
 }
 
-export default blockRowCol;
+module.exports = {
+    blockRowCol: blockRowCol
+}

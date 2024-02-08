@@ -1,4 +1,4 @@
-import { getRow, getCol, getBox, getRowColBoxNum, getCandidates, copyCandidates } from "./Utility";
+const { getRow, getCol, getBox, getRowColBoxNum, getCandidates } = require('./Utility');
 
 function uniqueCandidate(candidates, unfilled, insertVal) {
     //itrate through every unfilled space
@@ -64,4 +64,6 @@ function uniqueCandidate(candidates, unfilled, insertVal) {
     };
 }
 
-export default uniqueCandidate;
+module.exports = {
+    uniqueCandidate: uniqueCandidate
+}

@@ -1,12 +1,3 @@
-//copy the array of one board into the array of another
-function copyBoard (src, dest) {
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            dest[i][j] = src[i][j];
-        }
-    }
-}
-
 //takes a row number as paramenter, and returns a set of indices of the spaces in that row
 function getRow(row) {
     let rowIndices = new Set();
@@ -40,20 +31,6 @@ function getBox(box) {
     return boxIndices;
 }
 
-//we assume that the puzzle is valid (no duplicates) and see if there are any 0's left to determine
-//whether it is solved or not
-function isSolved(puzzle) {
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            if (puzzle[i][j] == 0) {
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
 //calculate the row and or column and or box corresponding to a given index
 function getRowColBoxNum(index, which) {
     let retval = [];
@@ -70,19 +47,6 @@ function getRowColBoxNum(index, which) {
         retval.push(Math.trunc(index / 27) * 3 + Math.trunc((index % 9) / 3));
     }
 
-    return retval;
-}
-
-//get the candidates within a specific set of indices
-function getCandidates(candidates, indices) {
-    let retval = new Set();
-
-    indices.forEach((index) => {
-        candidates[index].forEach((candidate) => {
-            retval.add(candidate)
-        });
-    })
-    
     return retval;
 }
 
@@ -128,22 +92,6 @@ function setDifference(set1, set2) {
     return retval;
 }
 
-//calling (set1 == set2) where set1 contains the same exact elements as set2 seems to return false in Javascript
-//this is a bit different than what I'm used to with C++. There *could* be something else that I'm missing,
-//but I'm making this setEquivalent function to check for set equality because it seems Javascript doesn't
-//have that does what I need.
-function setEquivalent(set1, set2) {
-    if (set1.size != set2.size) {
-        return false;
-    }
-
-    if (setDifference(set1, set2).size > 0) {
-        return false;
-    }
-
-    return true;
-}
-
 //for creating a copy of an array of candidates
 function copyCandidates(candidates) {
     let copy = [];
@@ -154,16 +102,12 @@ function copyCandidates(candidates) {
 }
 
 export {
-    copyBoard,
-    getRow, 
-    getCol, 
-    getBox, 
-    isSolved,
+    getRow,
+    getCol,
+    getBox,
     getRowColBoxNum,
-    getCandidates,
     setUnion,
     setIntersection,
     setDifference,
-    setEquivalent,
     copyCandidates
-};
+}

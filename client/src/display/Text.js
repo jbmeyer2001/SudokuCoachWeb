@@ -1,4 +1,4 @@
-import { getRowColBoxNum } from "../solver/Utility";
+import { getRowColBoxNum } from "../Utility";
 
 function textDisplaySoleCandidate(step, setText) {
     setText(`

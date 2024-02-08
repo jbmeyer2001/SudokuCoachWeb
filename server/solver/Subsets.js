@@ -1,12 +1,11 @@
-import {
+const {
     getRow,
     getCol,
     getBox,
     setIntersection,
     setDifference,
-    getCandidates,
-    copyCandidates
-} from './Utility.js'
+    getCandidates
+} = require('./Utility.js');
 
 function subsets(candidates, unfilled, removeCandidates) {
     let partition = new Set();
@@ -82,9 +81,9 @@ function subsets(candidates, unfilled, removeCandidates) {
                             step: "NAKEDSUBSET",
                             set: subsetName,
                             setNum: Math.trunc(i / 3),
-                            patternSpaces: partition,
-                            affectedSpaces: other,
-                            removalCandidates: partitionCandidates,
+                            affectedSpaces: [...other.values()],
+                            patternSpaces: [...partition.values()],
+                            removalCandidates: [...partitionCandidates.values()]
                         };
                     }
                     else {
@@ -92,9 +91,9 @@ function subsets(candidates, unfilled, removeCandidates) {
                             step: "HIDDENSUBSET",
                             set: subsetName,
                             setNum: Math.trunc(i / 3),
-                            affectedSpaces: other,
-                            patternCandidates: setDifference(otherCandidates, partitionCandidates),
-                            removalCandidates: partitionCandidates,
+                            affectedSpaces: [...other.values()],
+                            patternCandidates: [...setDifference(otherCandidates, partitionCandidates).values()],
+                            removalCandidates: [...partitionCandidates.values()]
                         };
                     }
                 }
@@ -145,4 +144,6 @@ function subsets(candidates, unfilled, removeCandidates) {
     }
 }
 
-export default subsets;
+module.exports = {
+    subsets: subsets
+}

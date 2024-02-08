@@ -1,12 +1,11 @@
-import {
+const {
     getRow, 
     getCol, 
     setUnion, 
     setIntersection,
     setDifference,
-    getCandidates,
-    copyCandidates
-} from './Utility.js';
+    getCandidates
+} = require('./Utility.js');
 
 function XWing(candidates, removeCandidates) {
     //iterate through combinations of rows and columns that can form x-wings
@@ -66,8 +65,8 @@ function XWing(candidates, removeCandidates) {
                                 col1: col1,
                                 col2: col2,
                                 inRows: inRows,
-                                intersectionSpaces: intSpaces,
-                                affectedSpaces: affectedSpaces,
+                                intersectionSpaces: [...intSpaces.values()],
+                                affectedSpaces: [...affectedSpaces.values()]
                             };
                         }
                     }
@@ -81,4 +80,6 @@ function XWing(candidates, removeCandidates) {
     };
 }
 
-export default XWing;
+module.exports = {
+    XWing: XWing
+}

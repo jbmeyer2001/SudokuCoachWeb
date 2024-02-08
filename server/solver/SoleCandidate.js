@@ -1,4 +1,4 @@
-import { getRowColBoxNum, copyCandidates } from "./Utility";
+const { getRowColBoxNum }  = require('./Utility');
 
 function soleCandidate(candidates, unfilled, insertVal) {
 
@@ -27,4 +27,6 @@ function soleCandidate(candidates, unfilled, insertVal) {
     };
 }
 
-export default soleCandidate;
+module.exports = {
+    soleCandidate: soleCandidate
+}
