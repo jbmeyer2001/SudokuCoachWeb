@@ -2,20 +2,20 @@
 
 <h2>Description</h2>
 
- - A front end web application built using React and JavaScript, which allows the input of Sudoku Puzzles
-and solves them for the user. The program also displays a color coded version of the most recent pattern along
-with a text description.
+ - A web application built using React.js and Express.js, which allows the input of Sudoku Puzzles
+and solves them for the user. The program also displays a color-coded version of the most recent pattern and a text description.
  - The algorithm searches for the following patterns: Sole Candidate, Unique Candidate, Block to Row or Column interaction,
 Block to Block interaction, Naked Subset, Hidden Subset, X-Wing and Y-Wings. Some resources I used for determining the
 patterns are https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php and https://www.sudokuwiki.org/Y_Wing_Strategy.
 The algorithm specifically is ported from a C++ version of this project I have made to JavaScript.
-- My goal was primarily to learn about front end development, and to teach myself React, JavaScript, and the basics of HTML/CSS.
+- My goal is to add more functionality, as well as a database connection, and deploy it as a full-stack web application.
 
 <h2>How to Use</h2>
 
- - See the deployment of this on github pages: https://jbmeyer2001.github.io/SudokuCoachWeb/
- - either input numbers into the puzzle provided, or select from 10 presets (all NYT hard puzzles)
- - Step through the solution to a given puzzle using the 'next step' button.
+ - clone repository.
+ - cd into 'server', run 'npm install' then 'npm run dev'
+ - cd into 'client', run 'npm install' then 'npm start'
+ - use one of the presets or input your own sudoku, and step through the solution.
 
 <h2>Samples</h2>
 <h3>Sole Candidate</h3>
