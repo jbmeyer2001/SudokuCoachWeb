@@ -161,6 +161,9 @@ spaceRed[0] = new Set();
 const [displaySpaceGreen, setDisplaySpaceGreen] = useState(spaceGreen);
 const [displaySpaceRed, setDisplaySpaceRed] = useState(spaceRed);
 
+const [activeSpace, setActiveSpace] = useState(-1);
+const [inputNotes, setInputNotes] = useState(false);
+
 function handleResetPuzzle() {
   //remove all displays
   clearDisplayColors();
@@ -181,10 +184,10 @@ function handleResetPuzzle() {
 
   //enable/disable required button states, and remove discriptive text on the most recent step
   setAllCandidates(updatedAllCandidates);
-  setStepBtnDisable(true);
-  setSolving(false);
-  setStepText("");
-  displayStep = true;
+  //setStepBtnDisable(true);
+  //setSolving(false);
+  //setStepText("");
+  //displayStep = true;
 }
 
 function handleSubmitPuzzle() {
@@ -229,7 +232,6 @@ function setCandidates(puzzle) {
 }
 
 function handleNextStep() {
-  console.log(curSoln["step1"]);
   /*
     every step we either want to:
       - Display the changes made by the pattern by setting the colors of candidates/spaces and
@@ -394,6 +396,49 @@ function updateAllCandidates(step) {
   setAllCandidates(newCandidates);
 }
 
+function numberInput(val) {
+  //active space
+  if(activeSpace == -1) {
+    return;
+  }
+
+  //get current state
+  let updateDisplayPuzzle = [...displayPuzzle];
+  let updateCandidates = [...allCandidates];
+
+  //check whether we should be adjusting notes (candidates) or the actual numbers
+  if (!inputNotes) {
+    //we are adjusting the space values, get the current display puzzle
+    let [row, col] = getRowColBoxNum(activeSpace, ["row", "col"]);
+  
+    //if we are using the numpad and the value already exists in the active space then remove it
+    //otherwise, set the space value to the value passed to this function.
+    if (arguments[1] == "numpad" && updateDisplayPuzzle[row][col] == val) {
+      updateDisplayPuzzle[row][col] = '';
+    }
+    else {
+      updateDisplayPuzzle[row][col] = val;
+
+      //clear candidates if adding a value
+      updateCandidates[activeSpace].clear();
+    }
+  }
+  else {
+    //if the numpad was used and the candidate already exists in the active space then remove it
+    //otherwise, put the candidate into the space
+    if (arguments[1] == "numpad" && updateCandidates[activeSpace].has(val)) {
+      updateCandidates[activeSpace].delete(val);
+    }
+    else {
+      updateCandidates[activeSpace].add(val);
+    }
+  }
+
+  //update state
+  setDisplayPuzzle(updateDisplayPuzzle);
+  setAllCandidates(updateCandidates);
+}
+
 return (
   <div className="App">
     <h1>Sudoku Coach</h1>
@@ -402,7 +447,10 @@ return (
     <button onClick={handleNextStep} disabled={stepBtnDisable}>Step</button>
     <hr></hr>
     <div class="app-view">
-      <Numpad />
+      <Numpad 
+        setInputNotes={setInputNotes}
+        numberInput={numberInput}
+      />
       <Board 
         puzzle={displayPuzzle}
         solving={solving}
@@ -413,6 +461,8 @@ return (
         allCandidates={allCandidates}
         displayPuzzle={displayPuzzle}
         setDisplayPuzzle={setDisplayPuzzle}
+        setActiveSpace={setActiveSpace}
+        numberInput={numberInput}
       />
       <InputOptions />
       <p 
@@ -423,6 +473,7 @@ return (
           margin: "auto"
         }}
       >{stepText}</p>
+      <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(1)}} disabled={solving}>preset 1</button>
     </div>
     <hr></hr>
   </div>

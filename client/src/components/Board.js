@@ -51,6 +51,8 @@ function Board(props) {
         let id = document.activeElement.id;
         let cell = document.getElementById(`cell${id}`);
         cell.style.background = "salmon";
+
+        props.setActiveSpace(id);
       }
 
       function keyDown(event) {
@@ -62,13 +64,11 @@ function Board(props) {
         let updatedDisplayPuzzle = [...props.displayPuzzle];
 
         if (code == "Delete" || code == "Backspace" || code == "Digit0" || code == "Numpad0") {
-          updatedDisplayPuzzle[row][col] = '';
+          props.numberInput('');
         }
         else if (code.includes("Digit") || code.includes("Numpad")) {
-          updatedDisplayPuzzle[row][col] = code[code.length - 1];
+          props.numberInput(code[code.length - 1]);
         }
-
-        props.setDisplayPuzzle(updatedDisplayPuzzle);
       }
 
   return (
@@ -94,7 +94,7 @@ function Board(props) {
                   <th style={{color:getCandidateColor(9, rowIndex * 9 + valIndex)}}>{props.allCandidates[rowIndex * 9 + valIndex].has(9) ? 9 : ''}</th>
                 </tr>
               </table>
-              <input type="number" value={val} onFocus={focused} onKeyDown={keyDown} disabled={props.solving} id={rowIndex * 9 + valIndex} style={{background:getSpaceColor(rowIndex * 9 + valIndex)}}></input>
+              <input type="number" value={val} onFocus={focused} onKeyDown={keyDown} disabled={/*props.solving*/false} id={rowIndex * 9 + valIndex} style={{background:getSpaceColor(rowIndex * 9 + valIndex)}}></input>
             </div>
           )
         }

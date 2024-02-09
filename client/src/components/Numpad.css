@@ -25,6 +25,7 @@ th > button {
     border: none;
     background: lightblue;
     z-index: 1;
+    font-size: 50px;
 }
 
 th > button:hover {

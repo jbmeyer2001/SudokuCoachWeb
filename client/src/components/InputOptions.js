@@ -6,12 +6,10 @@ function InputOptions() {
 
     function inputOwnBtn() {
         setInputMyOwn(true);
-        console.log(inputMyOwn);
     }
 
     function choosePuzzleBtn() {
         setInputMyOwn(false);
-        console.log(inputMyOwn);
     }
     return (
         <div class="inputOptions">
