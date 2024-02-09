@@ -1,0 +1,77 @@
+.inputOptions {
+    position: absolute;
+    right: 0%;
+    top: 0%;
+    height: 500px;
+    width: 340px;
+}
+
+.inputOptions > button {
+    width: 155px;
+    margin: 0px 0px;
+    border: none;
+    background: lightblue;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+}
+
+.inputOptions > button:hover {
+    background: lightskyblue;
+}
+
+.options {
+    position: absolute;
+    top: 30px;
+    bottom: 165px;
+    right: 15px;
+    left: 15px;
+    background: lightblue;
+    border: 1px solid black;
+    border-top: none;
+}
+
+.pattern-container {
+    position: relative;
+    justify-content: left;
+    height: 25px;
+}
+
+.pattern-container > input[type=checkbox] {
+    position: absolute;
+    left: 0px;
+    top: 2px;
+}
+
+.pattern-container > label {
+    position: absolute;
+    left: 20px;
+}
+
+.options > button {
+    position: absolute;
+    bottom: 0px;
+    width: 308px;
+    height: 50px;
+    left: -40px;
+    border: none;
+    background:lightblue;
+    border-top: 1px solid black;
+}
+
+.options > button:hover {
+    background: lightskyblue;
+}
+
+.userinput > button {
+    width: 155px;
+    margin: 0px 0px;
+    border: none;
+    background: lightblue;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+}
+
+.userinput > button:hover {
+    background: lightskyblue;
+}

@@ -1,3 +1,12 @@
+//copy the array of one board into the array of another
+function copyBoard (src, dest) {
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            dest[i][j] = Number(src[i][j]);
+        }
+    }
+}
+
 //takes a row number as paramenter, and returns a set of indices of the spaces in that row
 function getRow(row) {
     let rowIndices = new Set();
@@ -102,6 +111,7 @@ function copyCandidates(candidates) {
 }
 
 export {
+    copyBoard,
     getRow,
     getCol,
     getBox,

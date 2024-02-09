@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import { Board, InputOptions, Numpad } from'./components';
 import { useState } from "react";
 
 import { 
@@ -24,13 +25,14 @@ import {
   textDisplayYWing
 } from './display/Text.js'
 
-import { 
+import {
+  copyBoard,
   copyCandidates, 
   getRowColBoxNum, 
   setUnion, 
   getRow, 
   getCol, 
-  getBox 
+  getBox
 } from './Utility.js';
 
 var displayStep = true;
@@ -38,7 +40,6 @@ var curSoln;
 var stepNum = -1;
 
 function App() {
-
   async function postPuzzle(puzzle){
     try {
       let bodyJSON = JSON.stringify(Object.assign({}, puzzle));
@@ -100,15 +101,17 @@ function App() {
       const response = await fetch(`/puzzles/${puzzleID}`);
       const json = await response.json();
       
+      let updatedDisplayPuzzle = [...displayPuzzle]
       //set board state
       for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
           let val = json.startBoard[i][j];
-          document.getElementById(i * 9 + j).value = (val != 0) ? val : '';
+          updatedDisplayPuzzle[i][j] = (val != 0) ? val : '';
         }
       }
 
       //puzzle is good - set candidates state and solution
+      setDisplayPuzzle(updatedDisplayPuzzle);
       setCandidates(json.startBoard);
       curSoln = json;
       stepNum = 1;
@@ -118,7 +121,7 @@ function App() {
     }
   }
 
-const displayPuzzle = [//TODO use useState on this and set DOM according to displayPuzzle
+const [displayPuzzle, setDisplayPuzzle] = useState([
   ['', '', '', '', '', '', '', '', ''],
   ['', '', '', '', '', '', '', '', ''],
   ['', '', '', '', '', '', '', '', ''],
@@ -128,7 +131,7 @@ const displayPuzzle = [//TODO use useState on this and set DOM according to disp
   ['', '', '', '', '', '', '', '', ''],
   ['', '', '', '', '', '', '', '', ''],
   ['', '', '', '', '', '', '', '', '']
-];
+]);
 
 //array of sets indicating values a space could be
 const initCandidates = [];
@@ -162,16 +165,20 @@ function handleResetPuzzle() {
   //remove all displays
   clearDisplayColors();
   
-  //set both the candidate sets and the board array as empty
-  let updatedAllCandidates = [...allCandidates];
+  //remove all values from puzzle display
+  let updatedDisplayPuzzle = [...displayPuzzle];
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
-      document.getElementById(i * 9 + j).value = '';
+      updatedDisplayPuzzle[i][j] = '';
     }
   }
+
+  //set candidates as empty
+  let updatedAllCandidates = [...allCandidates];
   for (let i = 0; i < 81; i++) {
     updatedAllCandidates[i].clear();
   }
+
   //enable/disable required button states, and remove discriptive text on the most recent step
   setAllCandidates(updatedAllCandidates);
   setStepBtnDisable(true);
@@ -183,11 +190,7 @@ function handleResetPuzzle() {
 function handleSubmitPuzzle() {
   //get number array representation from current display elements
   let curPuzzle = [[], [], [], [], [], [], [], [], []];
-  for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-      curPuzzle[i][j] = document.getElementById(i * 9 + j).value;
-    }
-  }
+  copyBoard(displayPuzzle, curPuzzle);
 
   postPuzzle(curPuzzle);
 }
@@ -287,7 +290,9 @@ function handleNextStep() {
     switch(step.step) {
       case "SOLECANDIDATE":
       case "UNIQUECANDIDATE":
-        document.getElementById(step.row * 9 + step.col).value = step.val;
+        let updatedDisplayPuzzle = [...displayPuzzle];
+        updatedDisplayPuzzle[step.row][step.col] = step.val;
+        setDisplayPuzzle(updatedDisplayPuzzle);
       case "BLOCKROWCOL":
       case "BLOCKBLOCK":
       case "NAKEDSUBSET":
@@ -388,40 +393,7 @@ function updateAllCandidates(step) {
   })
   setAllCandidates(newCandidates);
 }
-function editValue (event){
-  //when one of the number inputs changes
-  //get the row, column, and value associated with the given event
-  let val = document.getElementById(event.target.id).value;
-  if (val == '') {
-    return;
-  }
-  //if invalid number was added, set the input value to zero and alert user
-  if (val < 1 || val > 9) {
-    document.getElementById(event.target.id).value = '';
-    alert("inputs must be numbers between 1 and 9");
-  }
-}
-//set the color of the space in the App jsx according to color display sets
-function getSpaceColor(space) {
-  if (displaySpaceGreen[0].has(space)) {
-    return "rgba(0,255,0,0.2)";
-  }
-  if (displaySpaceRed[0].has(space)) {
-    return "rgba(255,0,0,0.2)";
-  }
-  return "none";
-}
-///set the color of the candidate in the App jsx according to color display sets
-function getCandidateColor(candidate, space) {
-  if (displayCandidateBlue[candidate].has(space)) {
-    return "blue";
-  }
-  if (displayCandidateRed[candidate].has(space)) {
-    return "red";
-  }
-  
-  return "black";
-}
+
 return (
   <div className="App">
     <h1>Sudoku Coach</h1>
@@ -429,58 +401,44 @@ return (
     <button onClick={handleSubmitPuzzle} disabled={solving}>Submit</button>
     <button onClick={handleNextStep} disabled={stepBtnDisable}>Step</button>
     <hr></hr>
-    <div class="board">{
-      displayPuzzle.map((row, rowIndex) =>
-        <div className="boardRow">{
-          row.map((val, valIndex) =>
-            <div class="boardCell">
-              <input type="number" onChange={editValue} disabled={solving} id={rowIndex * 9 + valIndex} style={{background:getSpaceColor(rowIndex * 9 + valIndex)}}></input>
-              <table>
-                <tr>
-                  <th style={{color:getCandidateColor(1, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(1) ? 1 : ''}</th>
-                  <th style={{color:getCandidateColor(2, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(2) ? 2 : ''}</th>
-                  <th style={{color:getCandidateColor(3, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(3) ? 3 : ''}</th>
-                </tr>
-                <tr>
-                  <th style={{color:getCandidateColor(4, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(4) ? 4 : ''}</th>
-                  <th style={{color:getCandidateColor(5, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(5) ? 5 : ''}</th>
-                  <th style={{color:getCandidateColor(6, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(6) ? 6 : ''}</th>
-                </tr>
-                <tr>
-                  <th style={{color:getCandidateColor(7, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(7) ? 7 : ''}</th>
-                  <th style={{color:getCandidateColor(8, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(8) ? 8 : ''}</th>
-                  <th style={{color:getCandidateColor(9, rowIndex * 9 + valIndex)}}>{allCandidates[rowIndex * 9 + valIndex].has(9) ? 9 : ''}</th>
-                </tr>
-              </table>
-            </div>
-          )
-        }
-        </div>
-      )
-    }  
+    <div class="app-view">
+      <Numpad />
+      <Board 
+        puzzle={displayPuzzle}
+        solving={solving}
+        displaySpaceGreen={displaySpaceGreen}
+        displaySpaceRed={displaySpaceRed}
+        displayCandidateBlue={displayCandidateBlue}
+        displayCandidateRed={displayCandidateRed}
+        allCandidates={allCandidates}
+        displayPuzzle={displayPuzzle}
+        setDisplayPuzzle={setDisplayPuzzle}
+      />
+      <InputOptions />
+      <p 
+        style={{
+          display: "block", 
+          height: "50px",
+          width: "500px",
+          margin: "auto"
+        }}
+      >{stepText}</p>
     </div>
-    <p 
-      style={{
-        display: "block", 
-        height: "50px",
-        width: "500px",
-        margin: "auto"
-      }}
-    >{stepText}</p>
     <hr></hr>
-    <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(1)}} disabled={solving}>preset 1</button>
-    <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(2)}} disabled={solving}>preset 2</button>
-    <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(3)}} disabled={solving}>preset 3</button>
-    <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(4)}} disabled={solving}>preset 4</button>
-    <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(5)}} disabled={solving}>preset 5</button>
-    <br></br>
-    <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(6)}} disabled={solving}>preset 6</button>
-    <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(7)}} disabled={solving}>preset 7</button>
-    <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(8)}} disabled={solving}>preset 8</button>
-    <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(9)}} disabled={solving}>preset 9</button>
-    <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(10)}} disabled={solving}>preset 10</button>
   </div>
 );
 }
+
+{/* <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(1)}} disabled={solving}>preset 1</button>
+<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(2)}} disabled={solving}>preset 2</button>
+<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(3)}} disabled={solving}>preset 3</button>
+<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(4)}} disabled={solving}>preset 4</button>
+<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(5)}} disabled={solving}>preset 5</button>
+<br></br>
+<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(6)}} disabled={solving}>preset 6</button>
+<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(7)}} disabled={solving}>preset 7</button>
+<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(8)}} disabled={solving}>preset 8</button>
+<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(9)}} disabled={solving}>preset 9</button>
+<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(10)}} disabled={solving}>preset 10</button> */}
 
 export default App;

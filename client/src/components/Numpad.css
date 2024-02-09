@@ -1,0 +1,46 @@
+.numpad {
+    position: absolute;
+    left: 0%;
+    top: 0%;
+    height: 500px;
+    width: 340px;
+}
+
+.numpad > table {
+    position: absolute;
+    background: none;
+}
+
+.numpad > table {
+    position: absolute;
+    top: 35px;
+    z-index: 0;
+}
+
+th > button {
+    width: 104px;
+    height: 104px;
+    margin: 3px 3px;
+    border-radius: 5px;
+    border: none;
+    background: lightblue;
+    z-index: 1;
+}
+
+th > button:hover {
+    background-color: teal;
+}
+
+.numpad > button {
+    position: absolute;
+    width:340px;
+    left: -38px;
+    bottom: 80px;
+    border-radius: 5px;
+    border: none;
+    background-color: lightblue;
+}
+
+.numpad > button:hover {
+    background-color: teal;
+}
