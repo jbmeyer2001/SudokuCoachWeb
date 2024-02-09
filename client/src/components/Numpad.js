@@ -1,6 +1,4 @@
-import { copyCandidates, getRowColBoxNum } from '../Utility';
 import './Numpad.css'
-import { useState } from 'react'
 
 function Numpad(props) {
 
@@ -26,7 +24,7 @@ function Numpad(props) {
                 <tr>
                     <th><button id="numpad7" onClick={() => {props.numberInput(7, "numpad")}}>7</button></th>
                     <th><button id="numpad8" onClick={() => {props.numberInput(8, "numpad")}}>8</button></th>
-                    <th><button id="numpad9" onClick={() => {props.numberInput(9, "numpad")}}>9</button></th>
+                    <th><button id="numpad9" onClick={() => {props.numberInput(9, "numpad" )}}>9</button></th>
                 </tr>
             </table>
             <br></br>

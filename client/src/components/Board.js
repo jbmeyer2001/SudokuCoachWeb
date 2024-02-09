@@ -1,9 +1,5 @@
 import './Board.css';
 
-import { 
-  getRowColBoxNum, 
-} from '../Utility.js';
-
 function Board(props) {
     //set the color of the space in the App jsx according to color display sets
     function getSpaceColor(space) {
@@ -28,20 +24,6 @@ function Board(props) {
         return "black";
     }
 
-    function editValue (event){
-        //when one of the number inputs changes
-        //get the row, column, and value associated with the given event
-        let val = document.getElementById(event.target.id).value;
-        if (val == '') {
-          return;
-        }
-        //if invalid number was added, set the input value to zero and alert user
-        if (val < 1 || val > 9) {
-          document.getElementById(event.target.id).value = '';
-          alert("inputs must be numbers between 1 and 9");
-        }
-      }
-
       function focused() {
         for (let i = 0; i < 81; i++) {
           let cell = document.getElementById(`cell${i}`)
@@ -58,10 +40,8 @@ function Board(props) {
       function keyDown(event) {
         //get row and column of element
         let id = document.activeElement.id;
-        let [row, col] = getRowColBoxNum(id, ["row", "col"]);
 
         let code = event.code;
-        let updatedDisplayPuzzle = [...props.displayPuzzle];
 
         if (code == "Delete" || code == "Backspace" || code == "Digit0" || code == "Numpad0") {
           props.numberInput('');
@@ -94,7 +74,7 @@ function Board(props) {
                   <th style={{color:getCandidateColor(9, rowIndex * 9 + valIndex)}}>{props.allCandidates[rowIndex * 9 + valIndex].has(9) ? 9 : ''}</th>
                 </tr>
               </table>
-              <input type="number" value={val} onFocus={focused} onKeyDown={keyDown} disabled={/*props.solving*/false} id={rowIndex * 9 + valIndex} style={{background:getSpaceColor(rowIndex * 9 + valIndex)}}></input>
+              <input type="number" value={val} onFocus={focused} onKeyDown={keyDown} disabled={false} id={rowIndex * 9 + valIndex} style={{background:getSpaceColor(rowIndex * 9 + valIndex)}}></input>
             </div>
           )
         }
