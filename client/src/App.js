@@ -190,23 +190,21 @@ const [inputNotes, setInputNotes] = useState(false);
 function handleResetPuzzle() {
   //remove all displays
   clearDisplayColors();
-  
-  //remove all values from puzzle display
-  let updatedDisplayPuzzle = [...displayPuzzle];
-  for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-      updatedDisplayPuzzle[i][j] = '';
-    }
-  }
 
-  //set candidates as empty
+  //clear candidates, and display puzzle
+  let updatedDisplayPuzzle = [...displayPuzzle];
   let updatedAllCandidates = [...allCandidates];
   for (let i = 0; i < 81; i++) {
+    updatedDisplayPuzzle[Math.trunc(i / 9)][i % 9] = '';
     updatedAllCandidates[i].clear();
   }
+  setDisplayPuzzle(updatedDisplayPuzzle);
+  setAllCandidates(updatedAllCandidates);
+  
+  //clear start puzzle set state
+  setStartPuzzle(new Set());
 
   //enable/disable required button states, and remove discriptive text on the most recent step
-  setAllCandidates(updatedAllCandidates);
   setStepBtnDisable(true);
   setSolving(false);
   setStepText("");
@@ -534,6 +532,7 @@ return (
           margin: "auto"
         }}
       >{stepText}</p>
+      <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(1)}} disabled={solving}>preset 1</button>
     </div>
     <hr></hr>
   </div>
