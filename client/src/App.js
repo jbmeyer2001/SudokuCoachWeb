@@ -35,7 +35,7 @@ import {
 } from './Utility.js';
 
 var displayStep = true;
-var curSoln;
+var curSoln = {empty: true};
 var stepNum = -1;
 
 function App() {
@@ -209,6 +209,10 @@ function handleResetPuzzle() {
   setSolving(false);
   setStepText("");
   displayStep = true;
+
+  //set solution to none
+  stepNum = -1;
+  curSoln = {empty: true};
 }
 
 async function handleSubmitPuzzle() {
@@ -445,6 +449,11 @@ function numberInput(val) {
 }
 
 async function showSolution() {
+  if (curSoln.empty) {
+    alert("a puzzle has not been established: either submit one or use one of the presets");
+    return;
+  }
+
   //have server try to solve current puzzle state
   let res = await postPuzzle(); 
   let puzzle = [...displayPuzzle];
