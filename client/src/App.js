@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { Board, InputOptions, Numpad } from'./components';
 import { useState } from "react";
@@ -40,9 +39,24 @@ var curSoln;
 var stepNum = -1;
 
 function App() {
-  async function postPuzzle(puzzle){
+  async function postPuzzle(savePuzzle = false){
     try {
-      let bodyJSON = JSON.stringify(Object.assign({}, puzzle));
+      //get puzzle from display, and set all empty spaces to zeroes
+      let puzzleZeroed = [[], [], [], [], [], [], [], [], []];
+      copyBoard(displayPuzzle, puzzleZeroed);
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          puzzleZeroed[i][j] = Number(puzzleZeroed[i][j]);
+        }
+      }
+
+      //convert puzzle to an object
+      let puzzleObj = Object.assign({}, puzzleZeroed);
+
+      //jsonify the puzzle, as well as an indication to the server whether the puzzle should be saved
+      let bodyJSON = JSON.stringify({puzzle:puzzleObj, savePuzzle: savePuzzle});
+
+      //set POST request
       const response = await fetch(`/puzzles`, {
         method: 'POST',
         headers: {
@@ -52,32 +66,28 @@ function App() {
         body: bodyJSON,
       })
       const json = await response.json();
-      
-      //if bad puzzle is defined, it measn teh server can't solve the puzzle
+
+      //if bad puzzle is defined, it means the server couldn't solve the puzzle
       if ("badPuzzle" in json) {
-        switch(json.badPuzzle) {
-          case "INVALID":
-          alert("Sudoku invalid!\nThere is a duplicate in one of the rows, columns, or boxes.");
-          return false;
-        case "UNSOLVEABLE":
-          alert("Sudoku invalid!\nCheck your entered values, the given sudoku doesn't have a solution.");
-          return false;
-        case "MULTIPLESOLUTIONS":
-          alert("Sudoku invalid!\nMake sure you entered every value correctly, as there's multiple solutions to the given puzzle (which makes it invalid).");
-          return false;
-        case "CANTSOLVE":
-          alert("While this puzzle is a valid, solveable puzzle with a single solution, this algorithm is not capable of solving it.");
-          return false;
-        default:
-          alert("server returned bad puzzle type" + json.badPuzzle);
-          return false;
-        }
+        return json.badPuzzle;
       }
 
-      //puzzle is good - set candidates state and solution
-      setCandidates(json.startBoard);
+      //set the start puzzle state
+      let start = new Set();
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          if (json.startBoard[i][j] != 0) {
+            start.add(i * 9 + j);
+          }
+        }
+      }
+      setStartPuzzle(start);
+
+      //make sure active space isn't displayed
+      setActiveSpace(-1);
+
+      //set the solution
       curSoln = json;
-      stepNum = 1;
       return true;
     }
     catch (error) {
@@ -102,19 +112,28 @@ function App() {
       const json = await response.json();
       
       let updatedDisplayPuzzle = [...displayPuzzle]
+      let start = new Set();
       //set board state
       for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
           let val = json.startBoard[i][j];
-          updatedDisplayPuzzle[i][j] = (val != 0) ? val : '';
+          if (val != 0) {
+            updatedDisplayPuzzle[i][j] = val;
+            start.add(i * 9 + j);
+          }
+          else {
+            updatedDisplayPuzzle[i][j] = '';
+          }
         }
       }
 
-      //puzzle is good - set candidates state and solution
+      //make sure active space isn't displayed
+      setActiveSpace(-1);
+
+      //set candidates state and solution
       setDisplayPuzzle(updatedDisplayPuzzle);
-      setCandidates(json.startBoard);
+      setStartPuzzle(start);
       curSoln = json;
-      stepNum = 1;
     }
     catch (error) {
       console.log(error);
@@ -132,6 +151,9 @@ const [displayPuzzle, setDisplayPuzzle] = useState([
   ['', '', '', '', '', '', '', '', ''],
   ['', '', '', '', '', '', '', '', '']
 ]);
+
+//set indicating the spaces that should not be changeable by the user once the puzzle has been submitted
+const [startPuzzle, setStartPuzzle] = useState(new Set());
 
 //array of sets indicating values a space could be
 const initCandidates = [];
@@ -162,6 +184,7 @@ const [displaySpaceGreen, setDisplaySpaceGreen] = useState(spaceGreen);
 const [displaySpaceRed, setDisplaySpaceRed] = useState(spaceRed);
 
 const [activeSpace, setActiveSpace] = useState(-1);
+
 const [inputNotes, setInputNotes] = useState(false);
 
 function handleResetPuzzle() {
@@ -184,51 +207,35 @@ function handleResetPuzzle() {
 
   //enable/disable required button states, and remove discriptive text on the most recent step
   setAllCandidates(updatedAllCandidates);
-  //setStepBtnDisable(true);
-  //setSolving(false);
-  //setStepText("");
-  //displayStep = true;
+  setStepBtnDisable(true);
+  setSolving(false);
+  setStepText("");
+  displayStep = true;
 }
 
-function handleSubmitPuzzle() {
-  //get number array representation from current display elements
-  let curPuzzle = [[], [], [], [], [], [], [], [], []];
-  copyBoard(displayPuzzle, curPuzzle);
+async function handleSubmitPuzzle() {
+  let res = await postPuzzle();
 
-  postPuzzle(curPuzzle);
-}
-
-function setCandidates(puzzle) {
-  //get the candidates according to the puzzle
-  let candidates = [];
-  for (let i = 0; i < 81; i++) {
-    candidates[i] = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-  }
-  
-  for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-      let val = puzzle[i][j];
-      let space = i * 9 + j;
-
-      if (val != 0) {
-        //remove all candidates from the current space
-        candidates[space].clear();
-
-        //get the row, column, and box number
-        let [row, col, box] = getRowColBoxNum(space, ["row", "col", "box"]);
-
-        //remove 'val' as a candidate from all spaces the current space interacts with
-        setUnion(getRow(row), getCol(col), getBox(box)).forEach((space) => {
-          candidates[space].delete(val);
-        })
-      }
+  //the postPuzzle resoponse will either be 'true' or it will be a string containing a message about what went wrong
+  if (typeof res == 'string') {
+    switch(res) {
+      case "INVALID":
+      alert("Sudoku invalid!\nThere is a duplicate in one of the rows, columns, or boxes.");
+      return false;
+    case "UNSOLVEABLE":
+      alert("Sudoku invalid!\nCheck your entered values, the given sudoku doesn't have a solution.");
+      return false;
+    case "MULTIPLESOLUTIONS":
+      alert("Sudoku invalid!\nMake sure you entered every value correctly, as there's multiple solutions to the given puzzle (which makes it invalid).");
+      return false;
+    case "CANTSOLVE":
+      alert("While this puzzle is a valid, solveable puzzle with a single solution, this algorithm is not capable of solving it.");
+      return false;
+    default:
+      alert("server returned bad puzzle type" + res);
+      return false;
     }
   }
-  
-  //update the required states
-  setAllCandidates(candidates);
-  setStepBtnDisable(false);
-  setSolving(true);
 }
 
 function handleNextStep() {
@@ -439,6 +446,57 @@ function numberInput(val) {
   setAllCandidates(updateCandidates);
 }
 
+async function showSolution() {
+  //have server try to solve current puzzle state
+  let res = await postPuzzle(); 
+  let puzzle = [...displayPuzzle];
+
+  //if the response isn't 'true' then the user f*cked up trying to solve the puzzle.
+  //Although 'curSoln', where the solution is stored, won't have been changed if the puzzle
+  //was bad, so all we have to do is reset the display to the startBoard from 'curSoln'
+  if (res != true) {
+    alert("there was an error made, resetting the puzzle before solving");
+    
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        let val = curSoln.startBoard[i][j];
+        puzzle[i][j] = (val != 0) ? val : '';
+      }
+    }
+    setDisplayPuzzle(puzzle);
+  }
+
+  //get calculate candidates according to puzzle and set their state
+  let candidates = [];
+  for (let i = 0; i < 81; i++) {
+    candidates[i] = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  }
+
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      let val = Number(puzzle[i][j]);
+      let space = i * 9 + j;
+      if (val != 0) {
+        //remove all candidates from the current space
+        candidates[space].clear();
+        //get the row, column, and box number
+        let [row, col, box] = getRowColBoxNum(space, ["row", "col", "box"]);
+        //remove 'val' as a candidate from all spaces the current space interacts with
+        setUnion(getRow(row), getCol(col), getBox(box)).forEach((space) => {
+          candidates[space].delete(val);
+        })
+      }
+    }
+  }
+  setAllCandidates(candidates);
+
+  //update step num and set required remaining states
+  stepNum = 1;
+  setSolving(true);
+  setStepBtnDisable(false);
+}
+
+
 return (
   <div className="App">
     <h1>Sudoku Coach</h1>
@@ -450,6 +508,7 @@ return (
       <Numpad 
         setInputNotes={setInputNotes}
         numberInput={numberInput}
+        showSolution={showSolution}
       />
       <Board 
         puzzle={displayPuzzle}
@@ -461,8 +520,10 @@ return (
         allCandidates={allCandidates}
         displayPuzzle={displayPuzzle}
         setDisplayPuzzle={setDisplayPuzzle}
+        activeSpace={activeSpace}
         setActiveSpace={setActiveSpace}
         numberInput={numberInput}
+        startPuzzle={startPuzzle}
       />
       <InputOptions />
       <p 
@@ -473,7 +534,6 @@ return (
           margin: "auto"
         }}
       >{stepText}</p>
-      <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(1)}} disabled={solving}>preset 1</button>
     </div>
     <hr></hr>
   </div>

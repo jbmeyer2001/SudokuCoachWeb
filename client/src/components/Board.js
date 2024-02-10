@@ -3,13 +3,20 @@ import './Board.css';
 function Board(props) {
     //set the color of the space in the App jsx according to color display sets
     function getSpaceColor(space) {
+        if (props.activeSpace == space) {
+          return "teal";
+        }
         if (props.displaySpaceGreen[0].has(space)) {
             return "rgba(0,255,0,0.2)";
         }
         if (props.displaySpaceRed[0].has(space)) {
             return "rgba(255,0,0,0.2)";
         }
-        return "none";
+        if (props.startPuzzle.has(space)) {
+          return "#d4dfed";
+        }
+        
+        return "#E8E8E8";
     }
 
     //set the color of the candidate in the App jsx according to color display sets
@@ -25,16 +32,7 @@ function Board(props) {
     }
 
       function focused() {
-        for (let i = 0; i < 81; i++) {
-          let cell = document.getElementById(`cell${i}`)
-          cell.style.background = "#E8E8E8";
-        }
-
-        let id = document.activeElement.id;
-        let cell = document.getElementById(`cell${id}`);
-        cell.style.background = "salmon";
-
-        props.setActiveSpace(id);
+        props.setActiveSpace(document.activeElement.id);
       }
 
       function keyDown(event) {
@@ -56,8 +54,8 @@ function Board(props) {
       props.puzzle.map((row, rowIndex) =>
         <div className="boardRow">{
           row.map((val, valIndex) =>
-            <div class="boardCell" id={`cell${rowIndex * 9 + valIndex}`}>
-              <table>
+            <div class="boardCell">
+              <table id={`cell${rowIndex * 9 + valIndex}`} style={{background:getSpaceColor(rowIndex * 9 + valIndex)}}>
                 <tr>
                   <th style={{color:getCandidateColor(1, rowIndex * 9 + valIndex)}}>{props.allCandidates[rowIndex * 9 + valIndex].has(1) ? 1 : ''}</th>
                   <th style={{color:getCandidateColor(2, rowIndex * 9 + valIndex)}}>{props.allCandidates[rowIndex * 9 + valIndex].has(2) ? 2 : ''}</th>
@@ -74,7 +72,7 @@ function Board(props) {
                   <th style={{color:getCandidateColor(9, rowIndex * 9 + valIndex)}}>{props.allCandidates[rowIndex * 9 + valIndex].has(9) ? 9 : ''}</th>
                 </tr>
               </table>
-              <input type="number" value={val} onFocus={focused} onKeyDown={keyDown} disabled={false} id={rowIndex * 9 + valIndex} style={{background:getSpaceColor(rowIndex * 9 + valIndex)}}></input>
+              <input type="number" value={val} onFocus={focused} onKeyDown={keyDown} disabled={props.startPuzzle.has(rowIndex * 9 + valIndex) || props.solving} id={rowIndex * 9 + valIndex}></input>
             </div>
           )
         }

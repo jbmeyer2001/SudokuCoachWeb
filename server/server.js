@@ -41,7 +41,7 @@ app.get("/puzzles/:puzzleID", (req, res) => {
 app.post("/puzzles", jsonParser, (req, res) => {
     //try to solve the puzzle
     let solver = new Solver();
-    copyBoard(req.body, solver.board);
+    copyBoard(req.body.puzzle, solver.board);
     
     let solution = solver.solve();
 
@@ -53,13 +53,15 @@ app.post("/puzzles", jsonParser, (req, res) => {
         return;
     }
 
-    //if it is solveable then...
-    //get a useable puzzle id
+    //save the puzzle if the client indicated to do so
+    if (req.body.savePuzzle) {
+        //get a useable puzzle id
     let puzzleID = Object.keys(puzzles).length + 1; //TODO CHANGE THIS!
 
     //add puzzle array to puzzles[] with corrosponding puzzle id
     puzzles[puzzleID] = solution;
     console.log("puzzleID: " + puzzleID);
+    }
 
     //send response 
     //TODO maybe send the id as well

@@ -30,7 +30,7 @@ function Numpad(props) {
             <br></br>
             <br></br>
             <br></br>
-            <button>Show Solution</button>
+            <button onClick={props.showSolution}>Show Solution</button>
         </div>
     )
 }
