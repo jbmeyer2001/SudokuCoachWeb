@@ -189,7 +189,7 @@ spaceRed[0] = new Set();
 const [displaySpaceGreen, setDisplaySpaceGreen] = useState(spaceGreen);
 const [displaySpaceRed, setDisplaySpaceRed] = useState(spaceRed);
 
-const [activeSpace, setActiveSpace] = useState(-1);
+const [activeSpace, setActiveSpace] = useState({space:-1,focused:false});
 
 const [inputNotes, setInputNotes] = useState(false);
 
@@ -209,6 +209,9 @@ function handleResetPuzzle() {
   
   //clear start puzzle set state
   setStartPuzzle(new Set());
+
+  //clear active space
+  setActiveSpace({space:-1,focused:false});
 
   //enable/disable required button states, and remove discriptive text on the most recent step
   setStepBtnDisable(true);
@@ -413,7 +416,7 @@ function updateAllCandidates(step) {
 
 function numberInput(val) {
   //active space
-  if(activeSpace == -1) {
+  if(activeSpace.space == -1) {
     return;
   }
 
@@ -424,28 +427,30 @@ function numberInput(val) {
   //check whether we should be adjusting notes (candidates) or the actual numbers
   if (!inputNotes) {
     //we are adjusting the space values, get the current display puzzle
-    let [row, col] = getRowColBoxNum(activeSpace, ["row", "col"]);
+    let [row, col] = getRowColBoxNum(activeSpace.space, ["row", "col"]);
   
     //if we are using the numpad and the value already exists in the active space then remove it
     //otherwise, set the space value to the value passed to this function.
-    if (arguments[1] == "numpad" && updateDisplayPuzzle[row][col] == val) {
+    if (updateDisplayPuzzle[row][col] == val) {
       updateDisplayPuzzle[row][col] = '';
     }
     else {
       updateDisplayPuzzle[row][col] = val;
 
       //clear candidates if adding a value
-      updateCandidates[activeSpace].clear();
+      updateCandidates[activeSpace.space].clear();
     }
   }
   else {
+    val = Number(val);
+
     //if the numpad was used and the candidate already exists in the active space then remove it
     //otherwise, put the candidate into the space
-    if (arguments[1] == "numpad" && updateCandidates[activeSpace].has(val)) {
-      updateCandidates[activeSpace].delete(val);
+    if (updateCandidates[activeSpace.space].has(val)) {
+      updateCandidates[activeSpace.space].delete(val);
     }
     else {
-      updateCandidates[activeSpace].add(val);
+      updateCandidates[activeSpace.space].add(val);
     }
   }
 

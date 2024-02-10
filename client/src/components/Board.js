@@ -3,8 +3,8 @@ import './Board.css';
 function Board(props) {
     //set the color of the space in the App jsx according to color display sets
     function getSpaceColor(space) {
-        if (props.activeSpace == space) {
-          return "teal";
+        if (props.activeSpace.space == space) {
+          return (props.activeSpace.focused) ? "teal" : "#A8A8A8";
         }
         if (props.displaySpaceGreen[0].has(space)) {
             return "rgba(0,255,0,0.2)";
@@ -32,7 +32,11 @@ function Board(props) {
     }
 
       function focused() {
-        props.setActiveSpace(document.activeElement.id);
+        props.setActiveSpace({space:document.activeElement.id,focused:true});
+      }
+
+      function blurred() {
+        props.setActiveSpace({space:props.activeSpace.space,focused:false});
       }
 
       function keyDown(event) {
@@ -72,7 +76,7 @@ function Board(props) {
                   <th style={{color:getCandidateColor(9, rowIndex * 9 + valIndex)}}>{props.allCandidates[rowIndex * 9 + valIndex].has(9) ? 9 : ''}</th>
                 </tr>
               </table>
-              <input type="number" value={val} onFocus={focused} onKeyDown={keyDown} disabled={props.startPuzzle.has(rowIndex * 9 + valIndex) || props.solving} id={rowIndex * 9 + valIndex}></input>
+              <input type="number" value={val} onBlur={blurred} onFocus={focused} onKeyDown={keyDown} disabled={props.startPuzzle.has(rowIndex * 9 + valIndex) || props.solving} id={rowIndex * 9 + valIndex}></input>
             </div>
           )
         }
