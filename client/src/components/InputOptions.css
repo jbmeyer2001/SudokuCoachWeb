@@ -54,13 +54,6 @@
     width: 308px;
     height: 50px;
     left: -40px;
-    border: none;
-    background:lightblue;
-    border-top: 1px solid black;
-}
-
-.options > button:hover {
-    background: lightskyblue;
 }
 
 .userinput > button {

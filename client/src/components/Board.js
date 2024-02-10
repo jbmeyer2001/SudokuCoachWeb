@@ -4,7 +4,7 @@ function Board(props) {
     //set the color of the space in the App jsx according to color display sets
     function getSpaceColor(space) {
         if (props.activeSpace.space == space) {
-          return (props.activeSpace.focused) ? "teal" : "#A8A8A8";
+          return (props.activeSpace.focused) ? "radial-gradient(lightblue, 90%, black)" : "radial-gradient(white, 90%, black)";
         }
         if (props.displaySpaceGreen[0].has(space)) {
             return "rgba(0,255,0,0.2)";
@@ -13,10 +13,12 @@ function Board(props) {
             return "rgba(255,0,0,0.2)";
         }
         if (props.startPuzzle.has(space)) {
-          return "#d4dfed";
+          return "#E8E8E8";
+          //return "#d4dfed";
         }
         
-        return "#E8E8E8";
+        return "white";
+        //return "#E8E8E8";
     }
 
     //set the color of the candidate in the App jsx according to color display sets
@@ -76,7 +78,7 @@ function Board(props) {
                   <th style={{color:getCandidateColor(9, rowIndex * 9 + valIndex)}}>{props.allCandidates[rowIndex * 9 + valIndex].has(9) ? 9 : ''}</th>
                 </tr>
               </table>
-              <input type="number" value={val} onBlur={blurred} onFocus={focused} onKeyDown={keyDown} disabled={props.startPuzzle.has(rowIndex * 9 + valIndex) || props.solving} id={rowIndex * 9 + valIndex}></input>
+              <input type="number" value={val} readOnly={true} onBlur={blurred} onFocus={focused} onKeyDown={keyDown} disabled={props.startPuzzle.has(rowIndex * 9 + valIndex) || props.solving} id={rowIndex * 9 + valIndex}></input>
             </div>
           )
         }

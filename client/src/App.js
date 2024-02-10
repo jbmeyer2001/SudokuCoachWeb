@@ -527,6 +527,7 @@ return (
         setInputNotes={setInputNotes}
         numberInput={numberInput}
         showSolution={showSolution}
+        solving={solving}
       />
       <Board 
         puzzle={displayPuzzle}
