@@ -8,7 +8,6 @@ function Numpad(props) {
 
     return (
         <div class="numpad">
-            <button onClick={props.showSolution} disabled={props.solving}>Show Solution</button>
             <input type="checkbox" onChange={handleNotesCheckboxChange}></input>
             <label>notes</label>
             <table>

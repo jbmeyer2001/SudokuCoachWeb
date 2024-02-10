@@ -8,7 +8,7 @@
 
 .numpad > table {
     position: absolute;
-    bottom: -9px;
+    top: 60px;
     left: -2px;
     z-index: 0;
 }
@@ -28,11 +28,10 @@ th > button {
     top: 0px;
 }
 
-/*EDIT THIS TO FIT WHAT I WANT*/
 label {
     z-index: -1;
     position: absolute;
-    top: 118px;
+    top: 8px;
     left: 145px;
     font-family: "Times New Roman", Times, serif;
     font-size: 25px;
@@ -40,11 +39,11 @@ label {
 
 input[type=checkbox] {
     position: absolute;
-    top: 110px;
+    top: 0px;
 	-webkit-appearance: none;
-	border: 1px solid #cacece;
+	border: 1px solid grey;
 	padding: 20px 60px;
-	border-radius: 3px;
+	border-radius: 5px;
 	display: inline-block;
 	position: relative;
     background: none;

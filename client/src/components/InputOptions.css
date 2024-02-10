@@ -6,65 +6,32 @@
     width: 340px;
 }
 
+label {
+    font-size: 15px;
+}
+
 .inputOptions > button {
     width: 155px;
-    margin: 0px 0px;
-    border: none;
-    background: lightblue;
-    border-bottom: 1px solid black;
-    border-top: 1px solid black;
-    border-left: 1px solid black;
-}
-
-.inputOptions > button:hover {
-    background: lightskyblue;
-}
-
-.options {
-    position: absolute;
-    top: 30px;
-    bottom: 165px;
-    right: 15px;
-    left: 15px;
-    background: lightblue;
-    border: 1px solid black;
-    border-top: none;
+    margin: 20px 20px;
 }
 
 .pattern-container {
+    display: inline-block;
     position: relative;
-    justify-content: left;
-    height: 25px;
+    height: 20px;
+    width: 150px;
+    margin: 5px 5px;
 }
 
 .pattern-container > input[type=checkbox] {
     position: absolute;
     left: 0px;
-    top: 2px;
+    top: 0px;
+    padding: 12px 70px;
 }
 
 .pattern-container > label {
     position: absolute;
-    left: 20px;
-}
-
-.options > button {
-    position: absolute;
-    bottom: 0px;
-    width: 308px;
-    height: 50px;
-    left: -40px;
-}
-
-.userinput > button {
-    width: 155px;
-    margin: 0px 0px;
-    border: none;
-    background: lightblue;
-    border-bottom: 1px solid black;
-    border-left: 1px solid black;
-}
-
-.userinput > button:hover {
-    background: lightskyblue;
+    top: 7px;
+    left: 9px;
 }

@@ -88,6 +88,12 @@ function App() {
         setStartPuzzle(start);
       }
       
+      //reset candidates
+      const candidates = [];
+      for (let i = 0; i < 81; i++) {
+        candidates[i] = new Set();
+      }
+      setAllCandidates(candidates);
 
       //make sure active space isn't displayed
       setActiveSpace(-1);
@@ -132,6 +138,13 @@ function App() {
           }
         }
       }
+
+      //reset candidates
+      const candidates = [];
+      for (let i = 0; i < 81; i++) {
+        candidates[i] = new Set();
+      }
+      setAllCandidates(candidates);
 
       //make sure active space isn't displayed
       setActiveSpace(-1);
@@ -514,19 +527,18 @@ async function showSolution() {
   setStepBtnDisable(false);
 }
 
-
+//
 return (
   <div className="App">
     <h1>Sudoku Coach</h1>
     <button onClick={() => {if(window.confirm('reset the puzzle?')){handleResetPuzzle();}}}>Reset</button>
-    <button onClick={handleSubmitPuzzle} disabled={solving}>Submit</button>
+    <button disabled={solving} onClick={showSolution}>Show Solution</button>
     <button onClick={handleNextStep} disabled={stepBtnDisable}>Step</button>
     <hr></hr>
     <div class="app-view">
       <Numpad 
         setInputNotes={setInputNotes}
         numberInput={numberInput}
-        showSolution={showSolution}
         solving={solving}
       />
       <Board 
@@ -544,7 +556,11 @@ return (
         numberInput={numberInput}
         startPuzzle={startPuzzle}
       />
-      <InputOptions />
+      <InputOptions 
+        submit={handleSubmitPuzzle}
+        getPuzzle={getPuzzle}
+        solving={solving}
+      />
       <p 
         style={{
           display: "block", 
@@ -553,23 +569,10 @@ return (
           margin: "auto"
         }}
       >{stepText}</p>
-      <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(1)}} disabled={solving}>preset 1</button>
     </div>
     <hr></hr>
   </div>
 );
 }
-
-{/* <button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(1)}} disabled={solving}>preset 1</button>
-<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(2)}} disabled={solving}>preset 2</button>
-<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(3)}} disabled={solving}>preset 3</button>
-<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(4)}} disabled={solving}>preset 4</button>
-<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(5)}} disabled={solving}>preset 5</button>
-<br></br>
-<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(6)}} disabled={solving}>preset 6</button>
-<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(7)}} disabled={solving}>preset 7</button>
-<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(8)}} disabled={solving}>preset 8</button>
-<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(9)}} disabled={solving}>preset 9</button>
-<button style={{margin: "5px 5px"}} onClick={() => {getPuzzle(10)}} disabled={solving}>preset 10</button> */}
 
 export default App;
