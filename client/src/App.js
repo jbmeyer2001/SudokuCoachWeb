@@ -72,16 +72,22 @@ function App() {
         return json.badPuzzle;
       }
 
-      //set the start puzzle state
-      let start = new Set();
-      for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-          if (json.startBoard[i][j] != 0) {
-            start.add(i * 9 + j);
+      //if start puzzle is empty that means this puzzle is being posted for the first time.
+      //If it isn't empty, it means we're checking changes the user made to an existing puzzle.
+      //We don't want their changes to be treated as the start puzzle, so only set the start 
+      //puzzle if start puzzle is empty to start out with.
+      if (startPuzzle.size == 0){
+        let start = new Set();
+        for (let i = 0; i < 9; i++) {
+          for (let j = 0; j < 9; j++) {
+            if (json.startBoard[i][j] != 0) {
+              start.add(i * 9 + j);
+            }
           }
         }
+        setStartPuzzle(start);
       }
-      setStartPuzzle(start);
+      
 
       //make sure active space isn't displayed
       setActiveSpace(-1);
