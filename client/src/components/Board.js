@@ -78,7 +78,7 @@ function Board(props) {
                   <th style={{color:getCandidateColor(9, rowIndex * 9 + valIndex)}}>{props.allCandidates[rowIndex * 9 + valIndex].has(9) ? 9 : ''}</th>
                 </tr>
               </table>
-              <input type="number" value={val} readOnly={true} onBlur={blurred} onFocus={focused} onKeyDown={keyDown} disabled={props.startPuzzle.has(rowIndex * 9 + valIndex) || props.solving} id={rowIndex * 9 + valIndex}></input>
+              <input type="number" value={val} readOnly={true} onBlur={blurred} onFocus={focused} onKeyDown={keyDown} disabled={props.startPuzzle.has(rowIndex * 9 + valIndex) || props.solving || props.solved} id={rowIndex * 9 + valIndex}></input>
             </div>
           )
         }

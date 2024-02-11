@@ -31,7 +31,9 @@ import {
   setUnion, 
   getRow, 
   getCol, 
-  getBox
+  getBox,
+  isValid,
+  isSolved
 } from './Utility.js';
 
 var displayStep = true;
@@ -182,6 +184,7 @@ for (let i = 0; i < 81; i++) {
 const [allCandidates, setAllCandidates] = useState(initCandidates);
 const [stepText, setStepText] = useState("");
 const [solving, setSolving] = useState(false);
+const [solved, setSolved] = useState(false);
 const [stepBtnDisable, setStepBtnDisable] = useState(true);
 
 //sets indicating colors different candidates should be
@@ -233,6 +236,7 @@ function handleResetPuzzle() {
   displayStep = true;
 
   //set solution to none
+  setSolved(false);
   stepNum = -1;
   curSoln = {empty: true};
 }
@@ -307,7 +311,7 @@ function handleNextStep() {
         textDisplayYWing(step, setStepText);
         break;
       case "SOLVED":
-        setStepBtnDisable(true);
+        setSolved(true);
         setStepText("Solved!");
         break;
       default:
@@ -467,6 +471,13 @@ function numberInput(val) {
     }
   }
 
+  let puzzleZeroed = [[], [], [], [], [], [], [], [], []];
+  copyBoard(updateDisplayPuzzle, puzzleZeroed);
+  if (isValid(puzzleZeroed) && isSolved(puzzleZeroed)) {
+    setSolved(true);
+    setStepText("Solved!");
+  }
+
   //update state
   setDisplayPuzzle(updateDisplayPuzzle);
   setAllCandidates(updateCandidates);
@@ -532,18 +543,20 @@ return (
   <div className="App">
     <h1>Sudoku Coach</h1>
     <button onClick={() => {if(window.confirm('reset the puzzle?')){handleResetPuzzle();}}}>Reset</button>
-    <button disabled={solving} onClick={showSolution}>Show Solution</button>
-    <button onClick={handleNextStep} disabled={stepBtnDisable}>Step</button>
+    <button disabled={solving||solved} onClick={showSolution}>Show Solution</button>
+    <button onClick={handleNextStep} disabled={stepBtnDisable||solved}>Step</button>
     <hr></hr>
     <div class="app-view">
       <Numpad 
         setInputNotes={setInputNotes}
         numberInput={numberInput}
         solving={solving}
+        solved={solved}
       />
       <Board 
         puzzle={displayPuzzle}
         solving={solving}
+        solved={solved}
         displaySpaceGreen={displaySpaceGreen}
         displaySpaceRed={displaySpaceRed}
         displayCandidateBlue={displayCandidateBlue}
@@ -560,6 +573,7 @@ return (
         submit={handleSubmitPuzzle}
         getPuzzle={getPuzzle}
         solving={solving}
+        solved={solved}
       />
       <p 
         style={{
