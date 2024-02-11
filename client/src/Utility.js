@@ -1,3 +1,12 @@
+//copy the array of one board into the array of another
+function copyBoard (src, dest) {
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            dest[i][j] = Number(src[i][j]);
+        }
+    }
+}
+
 //takes a row number as paramenter, and returns a set of indices of the spaces in that row
 function getRow(row) {
     let rowIndices = new Set();
@@ -101,7 +110,63 @@ function copyCandidates(candidates) {
     return copy;
 }
 
+function duplicates(indices, puzzle) {
+    let existingVals = new Set();
+
+    for (let i = 0; i < indices.length; i++) {
+        let [row, col] = getRowColBoxNum(indices[i], ["row", "col"]);
+        let value = puzzle[row][col];
+
+        //if the value is 0, keep iterating through the for loop
+        if (value == 0) {
+            continue;
+        }
+        
+        //if the value is a duplicate, return false
+        if (existingVals.has(value)) {
+            return true;
+        }
+
+        //if the value isn't a duplicate, add it to the existing values
+        existingVals.add(value);
+    }
+
+    return false;
+}
+
+//check if puzzle is valid (has no duplicates in rows, columns, or boxes)
+function isValid(puzzle) {
+
+    for (let i = 0; i < 9; i++) {
+        let rowIndices = Array.from(getRow(i));
+        let colIndices = Array.from(getCol(i));
+        let boxIndices = Array.from(getBox(i));
+
+        if (duplicates(rowIndices, puzzle) || duplicates(colIndices, puzzle) || duplicates(boxIndices, puzzle)) {
+            return false;
+        }
+    }
+
+    return true;
+
+}
+
+//we assume that the puzzle is valid (no duplicates) and see if there are any 0's left to determine
+//whether it is solved or not
+function isSolved(puzzle) {
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (puzzle[i][j] == 0) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 export {
+    copyBoard,
     getRow,
     getCol,
     getBox,
@@ -109,5 +174,7 @@ export {
     setUnion,
     setIntersection,
     setDifference,
-    copyCandidates
+    copyCandidates,
+    isValid,
+    isSolved
 }

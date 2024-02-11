@@ -1,0 +1,37 @@
+.inputOptions {
+    position: absolute;
+    right: 0%;
+    top: 0%;
+    height: 500px;
+    width: 340px;
+}
+
+label {
+    font-size: 15px;
+}
+
+.inputOptions > button {
+    width: 155px;
+    margin: 20px 20px;
+}
+
+.pattern-container {
+    display: inline-block;
+    position: relative;
+    height: 20px;
+    width: 150px;
+    margin: 5px 5px;
+}
+
+.pattern-container > input[type=checkbox] {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    padding: 12px 70px;
+}
+
+.pattern-container > label {
+    position: absolute;
+    top: 7px;
+    left: 9px;
+}
