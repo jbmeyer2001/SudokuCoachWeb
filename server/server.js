@@ -17,10 +17,14 @@ const jsonParser = bodyParser.json();
 const mongoose = require('mongoose');
 
 //database schemas
-const Sudoku = require('./models/sudoku');
+const Sudoku = require('./models/Sudoku');
 
 //start listening if we are able to open the database connection
 mongoose.connect(process.env.DB_URL)
+    .then(() => {
+        //serve react front end production build
+        app.use(express.static(path.join(__dirname,"../client/build")));
+    })
     .then(() => {
         app.listen(process.env.PORT, () => {
             console.log(`server running on port ${process.env.PORT}`);
