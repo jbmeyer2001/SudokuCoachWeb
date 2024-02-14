@@ -19,6 +19,9 @@ const mongoose = require('mongoose');
 //database schemas
 const Sudoku = require('./models/Sudoku');
 
+//include path
+const path = require("path");
+
 //start listening if we are able to open the database connection
 mongoose.connect(process.env.DB_URL)
     .then(() => {
