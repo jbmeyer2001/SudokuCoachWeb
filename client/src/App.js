@@ -109,20 +109,9 @@ function App() {
     }
   }
 
-  async function getPuzzleIDs() {
+  async function getPuzzle(queryParams) {
     try {
-      const response = await fetch('/puzzles');
-      const json = await response.json();
-      return json;
-    } 
-    catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function getPuzzle(puzzleID) {
-    try {
-      const response = await fetch(`/puzzles/${puzzleID}`);
+      const response = await fetch('/puzzlequery/?' + new URLSearchParams(queryParams));
       const json = await response.json();
       
       let updatedDisplayPuzzle = [...displayPuzzle]
